@@ -268,7 +268,7 @@ class AdministrativeController extends Controller
             //end compressing
 
 
-            $product->setImgPath(md5($compressedImgName));
+            $product->setImgPath(md5($compressedImgName) . ".jpg");
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($product);
@@ -280,7 +280,7 @@ class AdministrativeController extends Controller
             //relate product with category
             $this->insertProductCategoryRelation($productAfterFlush->getId(), $productAfterFlush->getCategoryId());
 
-            copy(PathConstants::$TEMPORARY_OUTPUT_DIRECTORY . $compressedImgName, PathConstants::$CATEGORIES_PATH . $productAfterFlush->getFatherCategory()->getLatinName() . DIRECTORY_SEPARATOR . $productAfterFlush->getId() . DIRECTORY_SEPARATOR . md5($compressedImgName));
+            copy(PathConstants::$TEMPORARY_OUTPUT_DIRECTORY . $compressedImgName, PathConstants::$CATEGORIES_PATH . $productAfterFlush->getFatherCategory()->getLatinName() . DIRECTORY_SEPARATOR . $productAfterFlush->getId() . DIRECTORY_SEPARATOR . md5($compressedImgName) . 'jpg');
             unlink($tempDestination);  //erase temp file
             unlink(PathConstants::$TEMPORARY_OUTPUT_DIRECTORY . $compressedImgName); //erase temp output file
             //end image processing
