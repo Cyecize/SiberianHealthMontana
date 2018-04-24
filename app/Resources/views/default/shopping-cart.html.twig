@@ -30,7 +30,7 @@
                         <td><input class="product-removal" type="checkbox" value="{{ count }}"></td>
                         {% set count = count + 1 %}
                         <td class="cart-prod-image">
-                            <a href="{{ path('product_details', {'id':cartProd.product.id, 'catPath':cartProd.product.fatherCategory.categoryNameForLinks}) }}">
+                            <a href="{{ path('product_details', {'id':cartProd.product.id, 'catPath':cartProd.product.fatherCategory.categoryNameForUrls(informator.getCharacterTranslator)}) }}">
                                 <img alt="{{ cartProd.product.description }}" src="{{ cartProd.product.imgPathForDisplay }}">
                             </a>
                         </td>

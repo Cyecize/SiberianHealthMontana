@@ -13,6 +13,7 @@ use AppBundle\Constant\ConstantValues;
 use AppBundle\Constant\PathConstants;
 use AppBundle\Entity\ProductCategory;
 use AppBundle\Entity\SocialLink;
+use AppBundle\Util\CharacterTranslator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -106,5 +107,8 @@ class BasicInformator
         return " Montana";
     }
 
+    public  function getCharacterTranslator() : CharacterTranslator{
+        return new CharacterTranslator();
+    }
 
 }

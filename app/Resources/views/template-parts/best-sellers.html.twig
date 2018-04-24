@@ -5,10 +5,10 @@
 
         {% for prod in informator.getBestSellers() %}
         <li>
-            <a href="{{ path('product_details', {'id':prod.id, 'catPath': prod.fatherCategory.categoryNameForLinks}) }}" title="{{ prod.title }}">
+            <a href="{{ path('product_details', {'id':prod.id, 'catPath': prod.fatherCategory.categoryNameForUrls(informator.getCharacterTranslator)}) }}" title="{{ prod.title }}">
                 <img src="{{ asset(prod.imgPathForDisplay) }}" alt="{{ prod.description }}">
             </a>
-            <a href="{{ path('product_details', {'id':prod.id, 'catPath': prod.fatherCategory.categoryNameForLinks}) }}">{{ prod.title }}</a>
+            <a href="{{ path('product_details', {'id':prod.id, 'catPath': prod.fatherCategory.categoryNameForUrls(informator.getCharacterTranslator)}) }}">{{ prod.title }}</a>
         </li>
         {% endfor %}
     </ul>

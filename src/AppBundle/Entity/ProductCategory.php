@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Util\CharacterTranslator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
@@ -184,6 +185,14 @@ class ProductCategory
         $a = implode(" \ ", $catNames);
 
         return $a;
+    }
+
+    /**
+     * @param CharacterTranslator $translator
+     * @return string
+     */
+    public function getCategoryNameForUrls(CharacterTranslator $translator) : string{
+        return $translator->convertFromCyrilicToLatin($this->getCategoryNameForLinks());
     }
 
     /**
