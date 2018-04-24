@@ -404,7 +404,7 @@ class Product
 
     public function getPriceForDisplay()
     {
-        return str_pad($this->getPrice(), 2, '0', STR_PAD_LEFT) . " лв.";
+        return sprintf("%0.2f",$this->getPrice()) . " лв.";
     }
 
     /**
