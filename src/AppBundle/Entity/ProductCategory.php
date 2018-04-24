@@ -182,7 +182,7 @@ class ProductCategory
             return $this->getCategoryName();
         $catNames = explode("|", $this->getCategoryName() . "|" . $this->parentCategory->getCategoryNameForLinks());
         $catNames = array_reverse($catNames);
-        $a = implode(" \ ", $catNames);
+        $a = implode(" / ", $catNames);
 
         return $a;
     }
@@ -192,7 +192,10 @@ class ProductCategory
      * @return string
      */
     public function getCategoryNameForUrls(CharacterTranslator $translator) : string{
-        return $translator->convertFromCyrilicToLatin($this->getCategoryNameForLinks());
+
+        $res = $translator->convertFromCyrilicToLatin($this->getCategoryNameForLinks());
+        $res = preg_replace('/\//', '', $translator->convertFromCyrilicToLatin($this->getCategoryNameForLinks()), 1);
+        return preg_replace('/\s+/', '-',$res) ;
     }
 
     /**
