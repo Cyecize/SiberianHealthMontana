@@ -1,0 +1,33 @@
+<div class="span4" style="display: inline-block;">
+    <h4 class="title"><span class="text"><strong>Съществуващ</strong> Потребител</span></h4>
+    <form action="{{ path('security_login') }}" method="post">
+        <input type="hidden" name="next" value="/">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">Потребителско име</label>
+                <div class="controls">
+                    <input type="text" name="_username" placeholder="Потр. име" id="username" class="input-xlarge">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Парола</label>
+                <div class="controls">
+                    <input name="_password" type="password" placeholder="***********" id="password"
+                           class="input-xlarge">
+                </div>
+            </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <div class="control-group">
+
+
+                <input tabindex="3" class="btn btn-inverse large" type="submit" value="Напред">
+
+
+                <hr>
+                <p class="reset">Забравена <a tabindex="4" href="#" title="Recover your username or password">парола</a>
+                </p>
+            </div>
+        </fieldset>
+    </form>
+</div>

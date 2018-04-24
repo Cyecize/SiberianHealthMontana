@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Добавяне на продукт {% endblock %}
+
+{% block stylesheets %}
+    <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/css/form-main.css') }}">
+{% endblock %}
+
+
+{% block body %}
+    {% include 'administrative/title-template-part.html.twig' with {'title':'Добавяне на нов продукт'} %}
+
+    {% if error %}
+        <h3 class="alert alert-danger">{{ error }}</h3>
+    {% endif %}
+
+    <div class="main-content clearfix">
+        <div class="span5">
+            <h3>Нов продукт</h3>
+            <form method="post" enctype="multipart/form-data">
+                <ul class="form-style-1">
+                    <li>
+                        <label for="prodName">Име на продукт <span class="required">*</span></label>
+                        <input maxlength="70" id='prodName' type="text" name="product[title]" required
+                               class="field-long" value="{{ product.title }}">
+                    </li>
+                    <li>
+                        <label for="mainCat">Главна категория</label>
+                        <select id="mainCat" name="product[categoryId]" class="field-select" required>
+                            <option disabled selected value> -- select an option --</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if cat.id == product.categoryId %} selected {% endif %}>{{ cat.categoryNameForCategoryCreate(informator.getEntityManager) }}</option>
+                            {% endfor %}
+                        </select>
+                    </li>
+                    <li>
+                        <label for="sibirCode">Сибирски код</label>
+                        <input id="sibirCode" type="text" required name="product[sibirCode]" placeholder="Сибирски код"
+                               class="field-long" value="{{ product.sibirCode }}">
+                    </li>
+
+                    <li>
+                        <label for="price">Цена</label>
+                        <input id="price" type="number" step="0.01" required name="product[price]" class="field-long" value="{{ product.price }}">
+                    </li>
+
+
+                    <li>
+                        <label for="description">Описание</label>
+                        <textarea id="description" required name="product[description]" class="field-long"
+                                  rows="10">{{ product.description }}</textarea>
+                    </li>
+
+                    <li>
+                        <label for="image">Снимка</label>
+                        <input id="image" type="file" accept="image/x-png,image/gif,image/jpeg" required
+                               name="image[img_file]"
+                               class="field-long">
+                    </li>
+
+                    <li>
+                        <label for="manufacturer">Производител</label>
+                        <input id="manufacturer" type="text" required name="product[manufacturer]" class="field-long"
+                               placeholder="Производител" value="Сибирско здраве" {{ product.manufacturer }}>
+                    </li>
+
+                    <li>
+                        <label for="quantity">Налични бройки: </label>
+                        <input id="quantity" type="number" required name="product[quantity]" class="field-long"
+                               value="10">
+                    </li>
+
+                    <li>
+                        <label for="soldCount">Продадени бройки: </label>
+                        <input id="soldCount" type="number" required name="product[soldCount]" class="field-long"
+                               value="0">
+                    </li>
+
+                    <li>
+                        <label for="hiddenProd" style="display:inline-block;">Скрит продукт: </label>
+                        <input id="hiddenProd" type="checkbox" name="product[hidden]" style="display: inline-block;">
+                    </li>
+
+                    {{ form_row(form._token) }}
+                    <li>
+                        <input type="submit" value="Създаване"/>
+                    </li>
+                </ul>
+            </form>
+        </div>
+
+        <div class="span5">
+            <h3>Съществуващ продукт</h3>
+            <div class="">
+                <input type="text" placeholder="Сибирски код" id="codeId">
+                <button id="searchProdBtn" class="btn btn-primary">Търсене</button>
+            </div>
+            <div id="res-box"></div>
+            <div id="existingProdForm" style="display: none;">
+                <form method="post" action="{{ path('relate_product_cat') }}" enctype="multipart/form-data">
+                    <ul class="form-style-1">
+                        <li>
+                            <label for="existingProdSelect">Продукт: </label>
+                            <input type="hidden" id="existingProdPlaceholder" name="product_rel[productId]">
+                            <select id="existingProdSelect">
+                                <option id="foundProd"></option>
+                            </select>
+                        </li>
+
+                        <li>
+                            <label for="existingCategories">Налични категории</label>
+                            <select id="existingCategories" name="product_rel[categoryId]" required>
+                                <option disabled selected>--- Избор ---</option>
+                                {% for cat in categories %}
+                                    <option value="{{ cat.id }}">{{ cat.categoryName }}</option>
+                                {% endfor %}
+                            </select>
+                        </li>
+
+                        <li>
+                            <button type="submit" class="btn btn-default">Изпращане</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            let resBox = $('#res-box');
+            let searchBtn = $('#searchProdBtn');
+            let form = $('#existingProdForm');
+            let idPlaceholder = $('#existingProdPlaceholder');
+            let prodVisiblePart = $('#foundProd');
+
+            searchBtn.on('click', async function () {
+                let codeId = $('#codeId').val().trim();
+                if (codeId === '') {
+                    alert('Невалиден код!');
+                    return;
+                }
+
+                let response = await $.ajax({
+                    method: "GET",
+                    url: "/admin/searchProdBySibirCode/" + codeId
+                });
+
+                response = JSON.parse(response);
+                if (response['status'] !== 200) {
+                    form.hide();
+                    resBox.text('Not found!');
+                    resBox.show();
+                } else {
+                    resBox.hide();
+                    form.show();
+                    idPlaceholder.val(response['productId']);
+                    prodVisiblePart.text(response['productName']);
+                }
+            });
+        });
+
+    </script>
+{% endblock %}

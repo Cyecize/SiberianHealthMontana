@@ -1,0 +1,166 @@
+{% extends 'base.html.twig' %}
+
+	{% block title %} {{ informator.websiteName }}: Начало{% endblock %}
+
+    {% block body %}
+        <section class="homepage-slider" id="home-slider">
+            <div class="flexslider">
+                <ul class="slides">
+                    {% for banner in flexBanners %}
+                        <li>
+                            <img src="{{ asset(banner.fixedImgName) }}" alt=""/>
+                            <div class="intro">
+                                {% if banner.headerOne|length > 0 %}
+                                    <h1>{{ banner.headerOne }}</h1>
+                                {% endif %}
+                                {% if banner.headerTwo|length > 0 %}
+                                    <p><span>{{ banner.headerTwo }}</span></p>
+                                {% endif %}
+                                {% if banner.headerThree|length > 0 %}
+                                    <p><span>{{ banner.headerThree }}</span></p>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+
+
+        <section class="main-content">
+            <div class="row">
+                <div class="span12">
+                    <div class="row">
+                        <div class="span12">
+                            <h4 class="title">
+                                <span class="pull-left"><span class="text"><span
+                                                class="line">Популярни <strong>Продукти</strong></span></span></span>
+                                <span class="pull-right">
+										<a class="left button" href="#myCarousel" data-slide="prev"></a><a
+                                            class="right button" href="#myCarousel" data-slide="next"></a>
+									</span>
+                            </h4>
+                            <div id="myCarousel" class="myCarousel carousel slide">
+                                <div class="carousel-inner">
+                                    <div class="active item">
+                                        <ul class="thumbnails">
+                                            {% for prod in trendingProds %}
+                                                {% embed 'template-parts/product-medium-box.html.twig' %} {% endembed %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="item">
+                                        <ul class="thumbnails">
+                                            {% for prod in trendingProdsP2 %}
+                                                {% embed 'template-parts/product-medium-box.html.twig' %} {% endembed %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="span12">
+                            <h4 class="title">
+                                <span class="pull-left"><span class="text"><span
+                                                class="line">Нови <strong>Продукти</strong></span></span></span>
+                                <span class="pull-right">
+										<a class="left button" href="#myCarousel-2" data-slide="prev"></a><a
+                                            class="right button" href="#myCarousel-2" data-slide="next"></a>
+									</span>
+                            </h4>
+                            <div id="myCarousel-2" class="myCarousel carousel slide">
+                                <div class="carousel-inner">
+                                    <div class="active item">
+                                        <ul class="thumbnails">
+                                            {% for prod in newProds %}
+                                                {% embed 'template-parts/product-medium-box.html.twig' %} {% endembed %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="item">
+                                        <ul class="thumbnails">
+                                            {% for prod in newProdsP2 %}
+                                                {% embed 'template-parts/product-medium-box.html.twig' %} {% endembed %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row feature_box">
+                        <div class="span4">
+                            <div class="service">
+                                <div class="responsive">
+                                    <img src="{{ asset('styles/themes/images/feature_img_2.png') }}" alt=""/>
+                                    <h4>Модерен <strong>Дизайн</strong></h4>
+                                    <p>Дрешните са от "хубава материя" и адидас, пума, найки, играчки.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="span4">
+                            <div class="service">
+                                <div class="customize">
+                                    <img src="{{ asset('styles/themes/images/feature_img_1.png') }}" alt=""/>
+                                    <h4>Безплатна <strong>Доставка</strong></h4>
+                                    <p>За дрешки надвишаващи 100 лева, да. Но иначе си се плаща!!! ;]].</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="span4">
+                            <div class="service">
+                                <div class="support">
+                                    <img src="{{ asset('styles/themes/images/feature_img_3.png') }}" alt=""/>
+                                    <h4>Нещо <strong>Хубаво</strong></h4>
+                                    <p>Тук ще споменем нещо много хубаво за сайта/фирмата, което все още не знаем.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="our_client">
+            <h4 class="title"><span class="text">Фирми-Партньори</span></h4>
+            <div class="row">
+                <div class="span2">
+                    <a href="#"><img alt="" src="{{ asset('styles/themes/images/clients/14.png') }}"></a>
+                </div>
+                <div class="span2">
+                    <a href="#"><img alt="" src="{{ asset('styles/themes/images/clients/35.png') }}"></a>
+                </div>
+                <div class="span2">
+                    <a href="#"><img alt="" src="{{ asset('styles/themes/images/clients/1.png') }}"></a>
+                </div>
+                <div class="span2">
+                    <a href="#"><img alt="" src="{{ asset('styles/themes/images/clients/2.png') }}"></a>
+                </div>
+                <div class="span2">
+                    <a href="#"><img alt="" src="{{ asset('styles/themes/images/clients/3.png') }}"></a>
+                </div>
+                <div class="span2">
+                    <a href="#"><img alt="" src="{{ asset('styles/themes/images/clients/4.png') }}"></a>
+                </div>
+            </div>
+        </section>
+
+
+
+        <script type="text/javascript">
+            $(function () {
+                $(document).ready(function () {
+                    $('.flexslider').flexslider({
+                        animation: "fade",
+                        slideshowSpeed: 4000,
+                        animationSpeed: 600,
+                        controlNav: false,
+                        directionNav: true,
+                        controlsContainer: ".flex-container" // the container that holds the flexslider
+                    });
+                });
+            });
+        </script>
+    {% endblock %}

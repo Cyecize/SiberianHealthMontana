@@ -1,0 +1,36 @@
+<div class="span4" style="display: inline-block;">
+    <h4 class="title"><span class="text"><strong>Нов </strong> потребител</span></h4>
+    <form  method="post" class="form-stacked" enctype="multipart/form-data" action="{{ path('security_register') }}" name = "authenticate">
+
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">Потребителско име</label>
+                <div class="controls">
+                    <input name="user[username]" maxlength="35" value="{{ userform.username }}" type="text" required placeholder="Потр. име" class="input-xlarge">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Email адрес</label>
+                <div class="controls">
+                    <input name="user[email]" maxlength="35" value="{{ userform.email }}" type="email" required placeholder="Email" class="input-xlarge">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Парола:</label>
+                <div class="controls">
+                    <input name="user[password]" type="password" maxlength="20" required placeholder="Поне 6 знака" class="input-xlarge">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Парола отново:</label>
+                <div class="controls">
+                    <input name="user[confPassword]" type="password" required placeholder="Потв. парола" class="input-xlarge">
+                </div>
+            </div>
+            {{ form_row(form._token) }}
+            <hr>
+            <div class="actions"><input tabindex="9" class="btn btn-inverse large" type="submit" value="Създаване на профил"></div>
+
+        </fieldset>
+    </form>
+</div>

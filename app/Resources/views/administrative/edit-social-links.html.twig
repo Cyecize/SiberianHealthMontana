@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редакция на линкове {% endblock %}
+
+
+{% block body %}
+
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':'Редакция на линкове'} %}
+
+    <div class="control-container">
+        {% for link in informator.getSocialLinks %}
+            <div style="display:inline-block; color: white;">
+                <a href="{{ link.link }}" style="text-decoration: none;">
+                    <span class="fa {{ link.icon }}"></span></a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ informator.websiteName }}: Вход {% endblock %}
+
+{% block body %}
+
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':'Вход/Регистрация'} %}
+
+    <section class="main-content">
+        <div class="row">
+            {% if error %}
+                <div style="" class="clearfix">
+                    <div class="span7">
+                        <h4 class="alert alert-danger">{{ error }}</h4>
+                    </div>
+                </div>
+
+            {% endif %}
+            {% include 'template-parts/login-form.html.twig' %}
+
+            {% include 'template-parts/register-form.html.twig' %}
+
+        </div>
+    </section>
+{% endblock %}

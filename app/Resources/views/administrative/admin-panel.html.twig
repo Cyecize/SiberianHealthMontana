@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Администраторски панел {% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('styles/administrative-styles/css/admin-main.css') }}">
+    <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/css/custom-admin-fa.css') }}">
+{% endblock %}
+{% block body %}
+
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':'Контролен Панел'} %}
+
+    <style>
+
+
+    </style>
+
+    <div class="control-container">
+        <div class=" col-sm-2">
+            <a href="{{ path('edit_social_links') }}">
+                <div class="div-square">
+                    <i class="fa fa-users fa-5x"></i>
+                    <h5>Промяна на социални линкове</h5>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-2">
+            <a href="{{ path('create_new_category') }}">
+                <div class="div-square">
+                    <i class="fa fa-tags fa-5x"></i>
+                    <h5>Добавяне на нова категория</h5>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-2">
+            <a href="{{ path('rename_category') }}">
+                <div class="div-square">
+                    <i class="fa fa-tags fa-5x"></i>
+                    <h5>Преименуване на категория</h5>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-2">
+            <a href="{{ path('add_new_product') }}">
+                <div class="div-square">
+
+                    <i class="fa fa-envelope-o fa-5x"></i>
+                    <h5>Нов продукт</h5>
+
+                </div>
+            </a>
+        </div>
+    </div>
+{% endblock %}
+

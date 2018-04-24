@@ -1,0 +1,16 @@
+{% block bestSeller %}
+<div class="block">
+    <h4 class="title"><strong>Най</strong> Популярни</h4>
+    <ul class="small-product">
+
+        {% for prod in informator.getBestSellers() %}
+        <li>
+            <a href="{{ path('product_details', {'id':prod.id, 'catPath': prod.fatherCategory.categoryNameForLinks}) }}" title="{{ prod.title }}">
+                <img src="{{ asset(prod.imgPathForDisplay) }}" alt="{{ prod.description }}">
+            </a>
+            <a href="{{ path('product_details', {'id':prod.id, 'catPath': prod.fatherCategory.categoryNameForLinks}) }}">{{ prod.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

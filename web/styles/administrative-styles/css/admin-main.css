@@ -1,0 +1,56 @@
+.control-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.col-sm-2{
+    display: inline-block;
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-sm-2 {
+    width: 250px;
+    max-height: 200px;
+}
+
+
+
+.div-square {
+    padding: 5px;
+    border: 3px double #e1e1e1;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    margin: 5px;
+    height: 150px;
+}
+
+.div-square:hover {
+    background: rgba(128, 128, 128, 0.6);
+}
+
+.div-square {
+    color: #808080;
+    text-decoration: none;
+}
+
+
+
+.div-square > a, .div-square > a:hover {
+    color: #808080;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+
+    .col-sm-2 {
+        width: auto;
+        min-width: 150px;
+        max-width: 200px;
+    }
+}

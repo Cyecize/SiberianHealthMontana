@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Преименуване на категория {% endblock %}
+
+{% block stylesheets %}
+    <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/css/form-main.css') }}">
+{% endblock %}
+
+
+{% block body %}
+
+
+    {% include 'administrative/title-template-part.html.twig' with {'title':'Добавяне на нова категория'} %}
+
+    {% if error %}
+        <h3 class="alert alert-danger">{{ error }}</h3>
+    {% endif %}
+
+    <form  method="post" enctype="multipart/form-data">
+        <ul class="form-style-1">
+            <li>
+                <label for="catName">Ново име на категория<span class="required">*</span></label>
+                <input maxlength="40" id = 'catName' type="text" name="product_category[categoryName]" required class="field-long" />
+            </li>
+            <li>
+                <label for="subCat">Изберете категория</label>
+                <select required  id="subCat" name="product_category[parentId]" class="field-select">
+                    <option value="" >Изберете категория</option>
+                    {% for cat in categories %}
+                        <option  value="{{ cat.id }}" >{{ cat.categoryNameForCategoryCreate(informator.getEntityManager) }}</option>
+                    {% endfor %}
+                </select>
+            </li>
+
+            {{ form_row(form._token) }}
+
+            <li>
+                <input type="submit" value="Създаване" />
+            </li>
+        </ul>
+    </form>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ informator.websiteName }}: {{ category.categoryName }} {% endblock %}
+
+{% block body %}
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':category.categoryName} %}
+
+    <section class="main-content">
+
+        <div class="row">
+            <div class="span9">
+                <ul class="thumbnails listing-products">
+                    {% set catProdLen = catProds|length %}
+                    {% for index in range(offset, informator.maxProductsPerPage * currentPage -1) %}
+                        {% if catProdLen  -1 >= index %}
+                            {% set prod = catProds[index] %}
+                            {% embed 'template-parts/product-medium-box.html.twig' %} {% endembed %}
+                        {% endif %}
+                    {% endfor %}
+
+                </ul>
+                <hr>
+                <div class=" pagination pagination-small pagination-centered">
+                    <ul>
+
+                        {% if currentPage > 1 %}
+                            <li><a href="{{path('category_details', {"id":category.id, 'page':currentPage-1}) }}">Предишна</a></li>
+                        {% endif %}
+                        {% if allPages > 0 %}
+                            {% for pageLink in range(1, allPages) %}
+                                <li class="{% if pageLink == currentPage %}active{% endif %}">
+                                    <a href="{{ path('category_details', {'id':category.id, 'page':pageLink}) }}">{{ pageLink }}</a>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <h4 class="alert alert-info">Няма продукти в тази категория</h4>
+                        {% endif %}
+
+                        {% if currentPage < allPages %}
+                            <li><a href="{{path('category_details', {"id":category.id, 'page':currentPage+1}) }}">Следваща</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="span3 col">
+                <div class="block">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">ПОДКАТЕГОРИИ
+                        {% if category.hasparentCategory %}
+                            <small class="alert-info">(<a href="{{ path('category_details', {'id':category.parentCategory.id}) }}" >Нагоре</a>)</small>
+                        {% endif %}
+
+                        </li>
+                        {% for category in subcategories %}
+                            <li><a href="{{ path('category_details', {'id':category.id}) }}">{{ category.categoryName }}</a></li>
+                        {% endfor %}
+
+                    </ul>
+                    <br/>
+                    <ul class="nav nav-list below">
+                        <li class="nav-header">MANUFACTURES</li>
+                        <li><a href="products.html">Adidas</a></li>
+                        <li><a href="products.html">Nike</a></li>
+                        <li><a href="products.html">Dunlop</a></li>
+                        <li><a href="products.html">Yamaha</a></li>
+                    </ul>
+                </div>
+
+                {% embed 'template-parts/randomizer.html.twig' %} {% endembed %}
+                {% embed 'template-parts/best-sellers.html.twig' %} {% endembed %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% block randomizer %}
+
+    <div class="block">
+        <h4 class="title">
+            <span class="pull-left"><span class="text">Продукти</span></span>
+            <span class="pull-right">
+									<a class="left button" href="#myCarousel" data-slide="prev"></a><a class="right button" href="#myCarousel" data-slide="next"></a>
+								</span>
+        </h4>
+        <div id="myCarousel" class="carousel slide">
+            <div class="carousel-inner">
+                {% set count = 0 %}
+                {% for prod in informator.getRandomProds() %}
+                <div class="item {% if count == 0 %}{% set count = 1 %} active {% endif %}">
+                    <ul class="thumbnails listing-products">
+                        <li class="span3">
+                            <div class="product-box">
+                                <a href="{{ path('product_details', {'id':prod.id, 'catPath': prod.fatherCategory.categoryNameForLinks}) }}"><img alt="" src="{{ asset(prod.imgPathForDisplay) }}"></a><br/>
+                                <a href="{{ path('product_details', {'id':prod.id, 'catPath': prod.fatherCategory.categoryNameForLinks}) }}" class="title">{{ prod.title }}</a><br/>
+                                <a href="{{ path('category_details',{'id':prod.fatherCategory.id}) }}" class="category">{{ prod.fatherCategory.categoryNameForLinks }}</a>
+                                <p class="price">{{ prod.priceForDisplay }}</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

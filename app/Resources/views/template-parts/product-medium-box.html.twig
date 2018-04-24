@@ -1,0 +1,9 @@
+<li class="span3">
+    <div class="product-box">
+        <span class="sale_tag"></span>
+        <a href="{{ path('product_details', {'id':prod.id, 'catPath': prod.fatherCategory.categoryNameForLinks}) }}"><img alt="{{ prod.summary }}" src="{{ asset(prod.imgPathForDisplay) }}"></a><br/>
+        <a href="{{ path('product_details', {'id':prod.id, 'catPath': prod.fatherCategory.categoryNameForLinks}) }}" class="title">{{ prod.title }}</a><br/>
+        <a href="{{ path('category_details', {'id':prod.fatherCategory.id}) }}" class="category">{{ prod.fatherCategory.categoryNameForLinks }}</a>
+        <p class="price">{{ prod.priceForDisplay }}</p>
+    </div>
+</li>
