@@ -52,13 +52,16 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
         <div class="row">
             <div class="span4">
                 <form method="POST" class="search_form" action="{{ path('search_product') }}">
-                    <input name="searchText" type="text" class="input-block-level search-query" Placeholder="Търсете лекарство" style="color:black;">
+                    <input name="searchText" type="text" class="input-block-level search-query"
+                           Placeholder="Търсете лекарство" style="color:black;">
                 </form>
             </div>
             <div class="span8">
                 <div class="account pull-right">
                     <ul class="user-menu">
-                        <li><a href="#">Профил</a></li>
+                        {% if app.user %}
+                            <li><a href="{{ path('profile_page') }}">{{ app.user.username }}</a></li>
+                        {% endif %}
                         <li><a href="{{ path('shopping_cart') }}">
                                 <div class="cart-notify-container" id="cart-noti-holder">
                                     Количка
@@ -78,16 +81,19 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
     </div>
 
     <section class="navbar main-menu">
-        <div id="top-main-menu"  class="navbar-inner main-menu">
+        <div id="top-main-menu" class="navbar-inner main-menu">
             <!-- asset('styles/themes/images/logo.png')  logo <img src="" class="site_logo" alt=""> -->
-            <a id="logo-anchor" href="/" class="logo pull-left cookiefont">{{ informator.WEBSITE_NAME_PART_ONE }} <span>{{ informator.WEBSITE_NAME_PART_TWO }}</span></a>
+            <a id="logo-anchor" href="/" class="logo pull-left cookiefont">{{ informator.WEBSITE_NAME_PART_ONE }}
+                <span>{{ informator.WEBSITE_NAME_PART_TWO }}</span></a>
             <nav id="menu" class="pull-right">
                 <ul>
                     {% for category in informator.getMainCategories %}
                         <li><a href="{{ path('category_details',{'id':category.id}) }}">{{ category.categoryName }}</a>
                             <ul>
                                 {% for subCat in category.getSubCategories() %}
-                                    <li><a href="{{ path('category_details', {'id':subCat.id}) }}">{{ subCat.categoryName }}</a></li>
+                                    <li>
+                                        <a href="{{ path('category_details', {'id':subCat.id}) }}">{{ subCat.categoryName }}</a>
+                                    </li>
                                 {% endfor %}
                             </ul>
                         </li>
@@ -103,53 +109,54 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
     {% block body %}{% endblock %}
     {% block footer %}
         <footer>
-        <link rel="stylesheet" type="text/css"
-              href="{{ asset('styles/themes/css/footer-distributed-with-address-and-phones.css') }}">
-        <section id="footer-bar">
-            <div class="row">
-                <div class="span3">
-                    <h4>Меню: </h4>
-                    <ul class="nav">
-                        <li><a href="/">Начало</a></li>
-                        <li><a href="{{ path('contacts') }}">Контакти</a></li>
-                        <li><a href="{{ path('shopping_cart') }}">Количка</a></li>
+            <link rel="stylesheet" type="text/css"
+                  href="{{ asset('styles/themes/css/footer-distributed-with-address-and-phones.css') }}">
+            <section id="footer-bar">
+                <div class="row">
+                    <div class="span3">
+                        <h4>Меню: </h4>
+                        <ul class="nav">
+                            <li><a href="/">Начало</a></li>
+                            <li><a href="{{ path('contacts') }}">Контакти</a></li>
+                            <li><a href="{{ path('shopping_cart') }}">Количка</a></li>
 
-                        {% if app.user %}
-                            <li><a href="{{ path('security_logout') }}">Изход</a></li>
-                        {% else %}
-                            <li><a href="{{ path('security_login') }}">Вход</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
-                <div class="span4">
-                    <h4>Профил: </h4>
-                    <ul class="nav">
-                        <li><a href="#">Профил</a></li>
-                        <li><a href="#">История на поръчките</a></li>
-                        <li><a href="#">Wish List</a></li>
-                    </ul>
-                </div>
-                <div class="span5" id="logo-holder">
-                    <p class="cookiefont">{{ informator.WEBSITE_NAME_PART_ONE }} <span>{{ informator.WEBSITE_NAME_PART_TWO }}</span></p>
-                    <p>Това е магазин за дрехи, играчки и др. Някой ден ще съм напълно сигурен за какво точно е този
-                        магазин.
-                        Междувременно заповядайте в сайта на Преттy Gal</p>
-                    <br/>
+                            {% if app.user %}
+                                <li><a href="{{ path('security_logout') }}">Изход</a></li>
+                            {% else %}
+                                <li><a href="{{ path('security_login') }}">Вход</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="span4">
+                        <h4>Профил: </h4>
+                        <ul class="nav">
+                            <li><a href="#">Профил</a></li>
+                            <li><a href="#">История на поръчките</a></li>
+                            <li><a href="#">Wish List</a></li>
+                        </ul>
+                    </div>
+                    <div class="span5" id="logo-holder">
+                        <p class="cookiefont">{{ informator.WEBSITE_NAME_PART_ONE }}
+                            <span>{{ informator.WEBSITE_NAME_PART_TWO }}</span></p>
+                        <p>Това е магазин за дрехи, играчки и др. Някой ден ще съм напълно сигурен за какво точно е този
+                            магазин.
+                            Междувременно заповядайте в сайта на Преттy Gal</p>
+                        <br/>
 
-                    <div class="footer-icons" id="cats">
-                        {% for link in informator.getSocialLinks %}
-                            <div style="display:inline-block; color: white;">
-                                <a href="{{ link.link }}" style="text-decoration: none;">
-                                    <span class="fa {{ link.icon }}"></span></a>
-                            </div>
-                        {% endfor %}
+                        <div class="footer-icons" id="cats">
+                            {% for link in informator.getSocialLinks %}
+                                <div style="display:inline-block; color: white;">
+                                    <a href="{{ link.link }}" style="text-decoration: none;">
+                                        <span class="fa {{ link.icon }}"></span></a>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-        <section id="copyright">
-            <a href="http://yekimov-tech.com:8090" target="_blank">Z-Computers &copy; 2018 {{ ga_tracking }}</a>
-        </section>
+            </section>
+            <section id="copyright">
+                <a href="http://yekimov-tech.com:8090" target="_blank">Z-Computers &copy; 2018 {{ ga_tracking }}</a>
+            </section>
         </footer>  {% endblock %}
 
     <script src="{{ asset('styles/themes/js/common.js') }}"></script>
@@ -157,29 +164,29 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
 
 
     <script>
-        $(()=>{
+        $(() => {
             let menuId = $('#menu');
-            let logoAnchor =  $('#logo-anchor');
+            let logoAnchor = $('#logo-anchor');
             let topMainMenu = $('#top-main-menu');
 
-            $(window).on('resize',function () {
+            $(window).on('resize', function () {
                 adjustNavPositions();
             });
 
             function adjustNavPositions() {
-                if(window.innerWidth < 1190){
-                    topMainMenu.css('text-align','center');
-                    topMainMenu.css('height','100px');
+                if (window.innerWidth < 1190) {
+                    topMainMenu.css('text-align', 'center');
+                    topMainMenu.css('height', '100px');
                     menuId.removeClass('pull-right');
-                    menuId.css('position','relative');
+                    menuId.css('position', 'relative');
                     logoAnchor.removeClass('pull-left');
-                    logoAnchor.css('position','relative');
+                    logoAnchor.css('position', 'relative');
 
-                }else {
-                    topMainMenu.css('text-align','inherit');
-                    topMainMenu.css('height','auto');
+                } else {
+                    topMainMenu.css('text-align', 'inherit');
+                    topMainMenu.css('height', 'auto');
                     menuId.addClass('pull-right');
-                    logoAnchor.css('position','absolute');
+                    logoAnchor.css('position', 'absolute');
                 }
             }
 

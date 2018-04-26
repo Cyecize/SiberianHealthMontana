@@ -1,0 +1,19 @@
+{% extends  'base.html.twig' %}
+
+{% block title %} Профил {% endblock %}
+
+{% block stylesheets %}
+    <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/css/form-main.css') }}">
+{% endblock %}
+
+{% block  body %}
+
+
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':"Профил"} %}
+
+<div class="main-content clearfix">
+
+    <h1>Welcome</h1>
+</div>
+
+{% endblock %}
