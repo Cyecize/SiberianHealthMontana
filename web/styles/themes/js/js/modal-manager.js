@@ -1,15 +1,26 @@
 var ModalManager = function (modalId) {
     var modal = null;
+    var modalRaw  = null;
 
     if(modalId !== undefined)
         initialize(modalId);
 
     function initialize(modalId) {
-        var name = "#" + modalId;
-        modal = $(name);
+        modalRaw = document.getElementById(modalId);
+        modal = $(modalRaw);
         modal.find('.close').on('click',function () {
             hideModal();
         });
+        modal.find('.cancel').on('click',function (e) {
+            e.preventDefault();
+            hideModal();
+        });
+
+        window.onclick = function(event) {
+            if (event.target == modalRaw) {
+                modal.hide();
+            }
+        }
 
     }
 
@@ -22,7 +33,7 @@ var ModalManager = function (modalId) {
     }
 
     function clearFields() {
-        $(modal).find('input').trigger('reset');
+        $(modal).find('form').trigger('reset');
     }
 
     return{

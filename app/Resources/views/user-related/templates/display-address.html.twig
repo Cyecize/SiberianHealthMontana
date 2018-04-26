@@ -6,7 +6,7 @@
     </div>
 
     <div id="address-action-btns" class="span5 pull-right" style="">
-        <button class="btn btn-default">Редакция</button>
-        <button class="btn btn-default">Изтриване</button>
+        <button class="btn btn-default edit-address-btn" addrId = "{{ address.id }}">Редакция</button>
+        <button class="btn btn-default delete-address-btn" addrId="{{ address.id }}" ><a href="{{ path('remove_address', {addressId:address.id}) }}">Изтриване </a> </button>
     </div>
 </div>

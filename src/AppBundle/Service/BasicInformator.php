@@ -13,6 +13,7 @@ use AppBundle\Constant\ConstantValues;
 use AppBundle\Constant\PathConstants;
 use AppBundle\Entity\ProductCategory;
 use AppBundle\Entity\SocialLink;
+use AppBundle\Entity\Township;
 use AppBundle\Util\CharacterTranslator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -65,6 +66,13 @@ class BasicInformator
     {
         return $this->getEntityManager()->getRepository(ProductCategory::class)
             ->findBy(array('parentId' => array(0,-1)),array('id' => 'ASC'));
+    }
+
+    /**
+     * @return Township[]
+     */
+    public function getTownships() : array {
+        return $this->entityManagerInterface->getRepository(Township::class)->findAll();
     }
 
     public function getEntityManager()

@@ -115,7 +115,7 @@ class UserAddress
     /**
      * @return string
      */
-    public function getFullName(): string
+    public function getFullName()
     {
         return $this->fullName;
     }
@@ -131,7 +131,7 @@ class UserAddress
     /**
      * @return string
      */
-    public function getPhoneNumber(): string
+    public function getPhoneNumber()
     {
         return $this->phoneNumber;
     }
@@ -249,6 +249,24 @@ class UserAddress
         return $this->townShip;
     }
 
+    /**
+     * @param Township $township
+     * @return  void
+     */
+    public function setTownship(Township $township) : void{
+        $this->townShip = $township;
+    }
 
+
+    /**
+     * @return bool
+     */
+    public function isAddressValid(): bool
+    {
+        if ($this->fullName == null || $this->phoneNumber == null || $this->address == null || $this->postCode == null || $this->fullName == "" || $this->phoneNumber == ""
+            || $this->address == "")
+            return false;
+        return true;
+    }
 }
 

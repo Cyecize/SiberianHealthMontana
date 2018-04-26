@@ -21,6 +21,8 @@
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+    max-width: 600px;
+
 }
 
 /* The Close Button */
@@ -36,4 +38,18 @@
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+.custom-modal .custom-modal-content {
+    width: 100%;
+}
+
+.custom-modal {
+    overflow: auto;
+}
+
+@media only screen and (max-width: 767px) {
+   .custom-modal .custom-modal-content{
+       padding-bottom: 300px;
+   }
 }

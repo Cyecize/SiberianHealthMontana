@@ -13,6 +13,13 @@
     {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':"Профил"} %}
 
     <div class="main-content clearfix">
+        {% if error %}
+            <h3 class="alert alert-danger">{{ error }}</h3>
+        {% endif %}
+        {% if success %}
+            <h3 class="alert alert-success">{{ success }}</h3>
+        {% endif %}
+
         <section class="section">
             <div class="alert alert-info">
                 <h4>Потр. име:
@@ -33,35 +40,86 @@
                 {% for address in addresses %}
                     {% include  'user-related/templates/display-address.html.twig' with {'address':address} %}
                 {% endfor %}
-
+                {% if addresses|length < 1 %}
+                    <h4 class="alert alert-danger">Нямате адреси</h4>
+                {% endif %}
                 <div>
                     <br>
-                    <button class="btn btn-default"><i class="fa fa-plus"></i> <span>Нов адрес</span></button>
+                    <button id="newAddressBtn" class="btn btn-default"><i class="fa fa-plus"></i> <span>Нов адрес</span>
+                    </button>
                 </div>
             </div>
         </section>
 
-
-        <div id="myModal" class="custom-modal">
-
-            <!-- Modal content -->
-            <div class="custom-modal-content">
-                <span class="close">&times;</span>
-                <p>Some text in the Modal..</p>
-            </div>
-
-        </div>
+        {% embed 'user-related/templates/address-modal.html.twig' %} {% endembed %}
 
     </div>
 
 {% endblock %}
 
 {% block javascripts %}
-<script src="{{ asset('styles/themes/js/js/modal-manager.js') }}"> </script>
+    <script src="{{ asset('styles/themes/js/js/modal-manager.js') }}"></script>
     <script>
-        let modalManager = new ModalManager;
-        console.log(modalManager);
-        modalManager.initialize("myModal");
-        modalManager.showModal();
+        $(function () {
+            var addressModalManager = new ModalManager;
+            addressModalManager.initialize("addressModal");
+
+            var form = $('#addressForm');
+            var addressModalTitle = $('#addressModalTitle');
+
+            var userFullName = $('#userFullName');
+            var userPhone = $('#userPhone');
+            var userTownship = $('#userTownship');
+            var userresidential = $('#userTown');
+            var useraddressField = $('#userAddress');
+            var userPostCode = $('#userPostCode');
+            var userAddressId = $('#userAddressId');
+
+            document.getElementById('newAddressBtn').addEventListener('click', function () {
+                addressModalManager.showModal();
+                addressModalManager.clearFields();
+                form.attr('action', '/user/address/add');
+                addressModalTitle.text('Добавяне на адрес');
+            });
+
+            $('.edit-address-btn').click(function () {
+                var id = $(this).attr('addrId');
+                addressModalManager.showModal();
+                form.attr('action', '/user/address/edit/' + id);
+                addressModalTitle.text('Редакция на адрес');
+
+                $.ajax({
+                    method:"GET",
+                    url:"/user/address/find/"+id,
+                    success:function (data) {
+                        var result = JSON.parse(data);
+                        var address = result['address'];
+
+                        userPostCode.val(address['postCode']);
+                        useraddressField.val(address['address']);
+                        userresidential.val(address['residential']);
+                        userFullName.val(address['fullName']);
+                        userPhone.val(address['phoneNumber']);
+                        userAddressId.val(address['id']);
+
+                        userTownship.find('option').removeAttr('selected');
+                        userTownship.find('option').toArray().forEach(option=>{
+                            var opt = $(option);
+                            if(Number(opt.val()) === address['townshipId']){
+                                opt.attr('selected', true);
+                            }
+                        });
+
+                    },
+                    error: console.error
+                })
+            });
+
+            document.addEventListener('keyup', function (ev) {
+                if (ev.keyCode === 27) addressModalManager.hideModal();
+            });
+        });
+
     </script>
+
 {% endblock %}
