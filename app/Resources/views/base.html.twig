@@ -59,9 +59,10 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
             <div class="span8">
                 <div class="account pull-right">
                     <ul class="user-menu">
-                        {% if app.user %}
-                            <li><a href="{{ path('profile_page') }}">{{ app.user.username }}</a></li>
-                        {% endif %}
+                        <li>
+                            <a href="{{ path('profile_page') }}"> {% if app.user %}{{ app.user.username }} {% else %}Профил{% endif %}</a>
+                        </li>
+
                         <li><a href="{{ path('shopping_cart') }}">
                                 <div class="cart-notify-container" id="cart-noti-holder">
                                     Количка

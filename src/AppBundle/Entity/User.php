@@ -286,6 +286,12 @@ class User implements UserInterface
         return count($username) == 1;
     }
 
+    /**
+     * @return string
+     */
+    public  function getRegisterDateAsString() : string{
+        return $this->dateRegistered->format("d.m,Y (h:i:s)");
+    }
 
 }
 

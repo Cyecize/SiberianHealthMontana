@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,6 +28,12 @@ class Township
      * @ORM\Column(name="town_name", type="string", length=45, unique=true)
      */
     private $townName;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserAddress", mappedBy="townShip")
+     */
+    private $addresses;
 
 
     /**

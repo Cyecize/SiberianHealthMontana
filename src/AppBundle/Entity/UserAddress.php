@@ -31,6 +31,21 @@ class UserAddress
     /**
      * @var string
      *
+     * @ORM\Column(name="full_name", type="string", length=100, nullable=false)
+     */
+    private $fullName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phone_number", type="string", length=15, nullable=false)
+     */
+    private $phoneNumber;
+
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="address", type="string", length=100)
      */
     private $address;
@@ -38,7 +53,7 @@ class UserAddress
     /**
      * @var string
      *
-     * @ORM\Column(name="residential", type="string", length=45)
+     * @ORM\Column(name="residential", type="string", length=45, nullable=false)
      */
     private $residential;
 
@@ -56,6 +71,12 @@ class UserAddress
      */
     private $townshipId;
 
+    /**
+     * @var Township
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Township", inversedBy="addresses" , fetch="EAGER")
+     * @ORM\JoinColumn(name="township_id", referencedColumnName="id")
+     */
+    private $townShip;
 
     /**
      * Get id
@@ -90,6 +111,39 @@ class UserAddress
     {
         return $this->userId;
     }
+
+    /**
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return $this->fullName;
+    }
+
+    /**
+     * @param string $fullName
+     */
+    public function setFullName(string $fullName): void
+    {
+        $this->fullName = $fullName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneNumber(): string
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * @param string $phoneNumber
+     */
+    public function setPhoneNumber(string $phoneNumber): void
+    {
+        $this->phoneNumber = $phoneNumber;
+    }
+
 
     /**
      * Set address
@@ -186,5 +240,15 @@ class UserAddress
     {
         return $this->townshipId;
     }
+
+    /**
+     * @return Township
+     */
+    public function getTownShip(): Township
+    {
+        return $this->townShip;
+    }
+
+
 }
 
