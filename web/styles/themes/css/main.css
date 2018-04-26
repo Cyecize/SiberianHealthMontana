@@ -802,6 +802,7 @@ section.our_client .row{
 		-moz-border-radius: 5px;
 		border-radius: 5px;
 		padding: 10px;
+		margin-top:5px;
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		box-sizing: border-box;
