@@ -14,7 +14,13 @@
                         <h4 class="alert alert-danger">{{ error }}</h4>
                     </div>
                 </div>
-
+            {% endif %}
+            {% if info %}
+                <div style="" class="clearfix">
+                    <div class="span7">
+                        <h4 class="alert alert-success">{{ info }}</h4>
+                    </div>
+                </div>
             {% endif %}
             {% include 'template-parts/login-form.html.twig' %}
 

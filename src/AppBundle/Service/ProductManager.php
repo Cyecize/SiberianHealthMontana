@@ -22,6 +22,11 @@ class ProductManager
         $this->entityManagerInterface = $em;
     }
 
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @return \AppBundle\Entity\HomeFlexBanner[]|Product[]|\AppBundle\Entity\UserAddress[]|array
+     */
     public function getTrendingProducts(int $limit, int $offset) {
        return $this->entityManagerInterface->getRepository(Product::class)->findBy(
             array('hidden'=>false), array('soldCount'=>'DESC'), $limit, $offset

@@ -1,0 +1,48 @@
+{% extends  'base.html.twig' %}
+
+{% block title %} Профил на {{ user.username }} {% endblock %}
+
+{% block  body %}
+
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':"Профил на " ~ user.username} %}
+
+    <div class="main-content clearfix">
+        <section class="section">
+            <div class="alert alert-info">
+                <h3>Информация</h3>
+                <hr>
+                <h4>Потр. име:
+                    <small>{{ user.username }}</small>
+                </h4>
+                <br>
+                <h4>Дата на регистрация
+                    <small>{{ user.getRegisterDateAsString }} </small>
+                </h4>
+                <br>
+                <h4>Email адрес:
+                    <small>{{ user.email }}</small>
+                </h4>
+                <br>
+                {% if isAppUserAdmin %}
+                    <h3>Адреси</h3>
+                    <hr>
+                    {% for address in addresses %}
+                        {% embed 'user-related/templates/display-address.html.twig' %}{% endembed %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+        </section>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            $('.edit-address-btn').hide();
+            $('.delete-address-btn').hide();
+        });
+    </script>
+{% endblock %}

@@ -91,59 +91,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row feature_box">
-                        <div class="span4">
-                            <div class="service">
-                                <div class="responsive">
-                                    <img src="{{ asset('styles/themes/images/feature_img_2.png') }}" alt=""/>
-                                    <h4>Модерен <strong>Дизайн</strong></h4>
-                                    <p>Дрешните са от "хубава материя" и адидас, пума, найки, играчки.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="span4">
-                            <div class="service">
-                                <div class="customize">
-                                    <img src="{{ asset('styles/themes/images/feature_img_1.png') }}" alt=""/>
-                                    <h4>Безплатна <strong>Доставка</strong></h4>
-                                    <p>За дрешки надвишаващи 100 лева, да. Но иначе си се плаща!!! ;]].</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="span4">
-                            <div class="service">
-                                <div class="support">
-                                    <img src="{{ asset('styles/themes/images/feature_img_3.png') }}" alt=""/>
-                                    <h4>Нещо <strong>Хубаво</strong></h4>
-                                    <p>Тук ще споменем нещо много хубаво за сайта/фирмата, което все още не знаем.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </section>
         <section class="our_client">
-            <h4 class="title"><span class="text">Фирми-Партньори</span></h4>
+            <h4 class="title"><span class="text">Категории</span></h4>
             <div class="row">
-                <div class="span2">
-                    <a href="#"><img alt="" src="{{ asset('styles/themes/images/clients/14.png') }}"></a>
-                </div>
-                <div class="span2">
-                    <a href="#"><img alt="" src="{{ asset('styles/themes/images/clients/35.png') }}"></a>
-                </div>
-                <div class="span2">
-                    <a href="#"><img alt="" src="{{ asset('styles/themes/images/clients/1.png') }}"></a>
-                </div>
-                <div class="span2">
-                    <a href="#"><img alt="" src="{{ asset('styles/themes/images/clients/2.png') }}"></a>
-                </div>
-                <div class="span2">
-                    <a href="#"><img alt="" src="{{ asset('styles/themes/images/clients/3.png') }}"></a>
-                </div>
-                <div class="span2">
-                    <a href="#"><img alt="" src="{{ asset('styles/themes/images/clients/4.png') }}"></a>
-                </div>
+                {% for category in informator.getMainCategories() %}
+                    {% if category.id != 0 %}
+                    <div class="span1 category-box">
+                        <a href="{{ path('category_details', {id:category.id}) }}">{{ category.categoryName }}</a>
+                    </div>
+                    {% endif %}
+                {% endfor %}
             </div>
         </section>
 

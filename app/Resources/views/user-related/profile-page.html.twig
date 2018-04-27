@@ -1,14 +1,11 @@
 {% extends  'base.html.twig' %}
 
 {% block title %} Профил {% endblock %}
-
 {% block stylesheets %}
     <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/css/form-main.css') }}">
     <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/js/css/modal.css') }}">
 {% endblock %}
-
 {% block  body %}
-
 
     {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':"Профил"} %}
 
@@ -33,8 +30,8 @@
             </div>
         </section>
 
-        <section class="section">
-            <h2>Адреси за доставка:</h2>
+        <section class="section clearfix">
+            <h3>Адреси за доставка:</h3>
             <hr>
             <div class="alert alert-info clearfix">
                 {% for address in addresses %}
@@ -51,75 +48,24 @@
             </div>
         </section>
 
-        {% embed 'user-related/templates/address-modal.html.twig' %} {% endembed %}
+        <section class="section clearfix">
+            <h3>Смяна на парола</h3>
+            <hr>
+            {% embed 'user-related/templates/edit-password-form.html.twig' %} {% endembed %}
+        </section>
 
+        <section class="section clearfix">
+            <h3>Премахване на профил</h3>
+            <hr>
+            <button class="btn btn-default" id="removeAccountBtn">Изтриване</button>
+        </section>
+
+        {% embed 'user-related/templates/address-modal.html.twig' %} {% endembed %}
     </div>
 
 {% endblock %}
 
 {% block javascripts %}
     <script src="{{ asset('styles/themes/js/js/modal-manager.js') }}"></script>
-    <script>
-        $(function () {
-            var addressModalManager = new ModalManager;
-            addressModalManager.initialize("addressModal");
-
-            var form = $('#addressForm');
-            var addressModalTitle = $('#addressModalTitle');
-
-            var userFullName = $('#userFullName');
-            var userPhone = $('#userPhone');
-            var userTownship = $('#userTownship');
-            var userresidential = $('#userTown');
-            var useraddressField = $('#userAddress');
-            var userPostCode = $('#userPostCode');
-            var userAddressId = $('#userAddressId');
-
-            document.getElementById('newAddressBtn').addEventListener('click', function () {
-                addressModalManager.showModal();
-                addressModalManager.clearFields();
-                form.attr('action', '/user/address/add');
-                addressModalTitle.text('Добавяне на адрес');
-            });
-
-            $('.edit-address-btn').click(function () {
-                var id = $(this).attr('addrId');
-                addressModalManager.showModal();
-                form.attr('action', '/user/address/edit/' + id);
-                addressModalTitle.text('Редакция на адрес');
-
-                $.ajax({
-                    method:"GET",
-                    url:"/user/address/find/"+id,
-                    success:function (data) {
-                        var result = JSON.parse(data);
-                        var address = result['address'];
-
-                        userPostCode.val(address['postCode']);
-                        useraddressField.val(address['address']);
-                        userresidential.val(address['residential']);
-                        userFullName.val(address['fullName']);
-                        userPhone.val(address['phoneNumber']);
-                        userAddressId.val(address['id']);
-
-                        userTownship.find('option').removeAttr('selected');
-                        userTownship.find('option').toArray().forEach(option=>{
-                            var opt = $(option);
-                            if(Number(opt.val()) === address['townshipId']){
-                                opt.attr('selected', true);
-                            }
-                        });
-
-                    },
-                    error: console.error
-                })
-            });
-
-            document.addEventListener('keyup', function (ev) {
-                if (ev.keyCode === 27) addressModalManager.hideModal();
-            });
-        });
-
-    </script>
-
+    <script src="{{ asset('styles/themes/js/js/profile-page.js') }}"></script>
 {% endblock %}
