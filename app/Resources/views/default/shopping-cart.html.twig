@@ -26,21 +26,22 @@
                     <tbody>
                     {% set count = 0 %}
                     {% for cartProd in products %}
-                    <tr>
-                        <td><input class="product-removal" type="checkbox" value="{{ count }}"></td>
-                        {% set count = count + 1 %}
-                        <td class="cart-prod-image">
-                            <a href="{{ path('product_details', {'id':cartProd.product.id, 'catPath':cartProd.product.fatherCategory.categoryNameForUrls(informator.getCharacterTranslator)}) }}">
-                                <img alt="{{ cartProd.product.description }}" src="{{ cartProd.product.imgPathForDisplay }}">
-                            </a>
-                        </td>
-                        <td>{{ cartProd.product.title }}</td>
-                        <td><!--<input type="number" disabled placeholder="1" value="-->
-                            {{ cartProd.quantity }}<!--" class="input-mini input-mini-mini">-->
-                        </td>
-                        <td>{{ cartProd.product.priceForDisplay }}</td>
-                        <td>{{ cartProd.quantity * cartProd.product.price }}</td>
-                    </tr>
+                        <tr>
+                            <td><input class="product-removal" type="checkbox" value="{{ count }}"></td>
+                            {% set count = count + 1 %}
+                            <td class="cart-prod-image">
+                                <a href="{{ path('product_details', {'id':cartProd.product.id, 'catPath':cartProd.product.fatherCategory.categoryNameForUrls(informator.getCharacterTranslator)}) }}">
+                                    <img alt="{{ cartProd.product.description }}"
+                                         src="{{ cartProd.product.imgPathForDisplay }}">
+                                </a>
+                            </td>
+                            <td>{{ cartProd.product.title }}</td>
+                            <td><!--<input type="number" disabled placeholder="1" value="-->
+                                {{ cartProd.quantity }}<!--" class="input-mini input-mini-mini">-->
+                            </td>
+                            <td>{{ cartProd.product.priceForDisplay }}</td>
+                            <td>{{ cartProd.quantity * cartProd.product.price }}</td>
+                        </tr>
                     {% endfor %}
 
                     <tr>
@@ -57,13 +58,14 @@
                 <hr>
 
                 <p class="buttons center">
-                    <button class="btn btn-default alert-danger" id="clear-cart-btn" type="button">Изчисти количката</button>
+                    <button class="btn btn-default alert-danger" id="clear-cart-btn" type="button">Изчисти количката
+                    </button>
                     <button class="btn btn-inverse" type="submit" id="checkout">Сметка</button>
                 </p>
             </div>
             <div class="span3 col">
 
-              {% embed 'template-parts/randomizer.html.twig' %} {% endembed %}
+                {% embed 'template-parts/randomizer.html.twig' %} {% endembed %}
 
                 {% embed 'template-parts/best-sellers.html.twig' %} {% endembed %}
             </div>
@@ -71,29 +73,38 @@
     </section>
 
     <script>
-        $('#clear-cart-btn').click(function () {
-            $.ajax({
-                url: "{{ path('erase_cart') }}",
-            }).done(function(data) {
-                alert(data);
-                location.href = "{{ path('shopping_cart') }}";
+        $(function () {
+            $('#clear-cart-btn').click(function () {
+                $.ajax({
+                    url: "{{ path('erase_cart') }}",
+                }).done(function (data) {
+                    alert(data);
+                    location.href = "{{ path('shopping_cart') }}";
+                });
             });
-        });
+            $('.product-removal').click(function (element) {
 
-        $('.product-removal').click(function (element) {
+                var sheIsOkWithDeleting = confirm("Изтриване на продукт?");
+                if (!sheIsOkWithDeleting)
+                    return;
+                if (!$(this).is(':checked')) {
+                    return;
+                }
+                var cartProdId = element.srcElement.attributes.value.value;
+                $.ajax({
+                    url: "/remove-product-from-cart/" + cartProdId,
+                }).done(function (data) {
+                    alert(data);
+                    location.href = "{{ path('shopping_cart') }}";
+                });
+            });
 
-            var sheIsOkWithDeleting = confirm("Изтриване на продукт?");
-            if(!sheIsOkWithDeleting)
-                return;
-            if(!$(this).is(':checked')){
-               return;
-            }
-             var cartProdId = element.srcElement.attributes.value.value;
-            $.ajax({
-                url: "/remove-product-from-cart/"+cartProdId,
-            }).done(function(data) {
-                alert(data);
-                location.href = "{{ path('shopping_cart') }}";
+            var isCartEmpty = Number("{{ isEmpty }}".trim());
+            $('#checkout').on('click', function () {
+                if (isNaN(isCartEmpty) || isCartEmpty !== 1)
+                    document.location.href = "{{ path('shopping_cart_checkout') }}";
+                else
+                    alert('Количката ви е празна');
             });
         })
     </script>

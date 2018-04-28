@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ informator.websiteName() }} Потвърждаване на поръчка {% endblock %}
+
+{% block stylesheets %}
+    <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/css/form-main.css') }}">
+    <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/js/css/modal.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':'Потвърждаване на поръчка'} %}
+
+    <section class="main-content clearfix">
+        <h3>Данни за поръчката</h3>
+        <hr>
+        <section class="alert alert-info">
+            <h4>Адрес за доставка</h4>
+            {% if app.user %}
+                <h5>Съществуващ потребител</h5>
+                <h6>Изберете адрес</h6>
+                {% embed 'user-related/templates/select-address-form.html.twig' %}{% endembed %}
+            {% else %}
+
+            {% endif %}
+            <div>
+                <br>
+                <button id="newAddressBtn" class="btn btn-default"><i class="fa fa-plus"></i> <span>Нов адрес</span>
+                </button>
+            </div>
+        </section>
+
+        {% embed 'user-related/templates/address-modal.html.twig' %} {% endembed %}
+    </section>
+
+{% endblock %}
+
+
+{% block javascripts %}
+    <script src="{{ asset('styles/themes/js/js/modal-manager.js') }}"></script>
+    <script src="{{ asset('styles/themes/js/js/profile-page.js') }}"></script>
+{% endblock %}

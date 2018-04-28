@@ -1,0 +1,29 @@
+<div>
+    <link rel="stylesheet" type="text/css" href="{{ asset('styles/themes/css/radio-buttons-styles.css') }}">
+    {% for address in addresses %}
+    <section class="choose-address-box">
+        <div>
+            <section class="custom-radio-holder">
+                <li>
+                    <input type="radio" id="addr{{ address.id }}" name="selectedAddress">
+                    <label for="addr{{ address.id }}"></label>
+                    <div class="check"></div>
+                </li>
+            </section>
+        </div>
+            {% embed 'user-related/templates/display-address.html.twig' %}{% endembed %}
+    </section>
+{% endfor %}
+    {% if addresses|length < 1 %}
+        <br>
+        <h4 class="alert alert-danger">Нямате адреси</h4>
+        <br>
+    {% endif %}
+
+<script>
+    $(function () {
+        $('.delete-address-btn').hide();
+    });
+</script>
+
+</div>

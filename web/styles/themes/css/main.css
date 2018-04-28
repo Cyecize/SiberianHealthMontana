@@ -934,11 +934,24 @@ section.our_client .row {
 }
 
 /**
+      checkout custom styles
+ */
+.choose-address-box {
+    display: flex;
+    align-items: center;
+}
+
+/**
+end checkout custom styles
+ */
+
+/**
 	profile page
 
  */
 .address-medium {
     background: white;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -964,13 +977,39 @@ section.our_client .row {
 /**
 	index custom styles
  */
-.category-box{
-    border:1px black solid;
-    min-width: 150px;
+.categories-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
 }
+
+.category-box {
+    border: 1px #eb4800 solid;
+    min-width: 150px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: black;
+    padding: 2px;
+}
+
+.category-box:hover {
+    background-color: #eb4800;
+    -webkit-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    -ms-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+}
+
 /**
 	end index custom styles
  */
+
+
 
 /* Responsive
 ----------------------------------------------------------------------------- */
@@ -1005,6 +1044,7 @@ section.our_client .row {
     .product-box {
         padding-top: 10px;
         padding-bottom: 10px;
+        height: auto;
     }
 
     .product-box:hover {
@@ -1054,5 +1094,26 @@ section.our_client .row {
 
     /**
     end user page responsive
+     */
+    /**
+	index custom styles
+ */
+    .categories-bottom a {
+        display: block;
+        width: 80%;
+    }
+
+    /**
+	end index custom styles
+ */
+
+    /**
+    checkout
+     */
+    .choose-address-box {
+        display: block;
+    }
+    /**
+    end checkout
      */
 }

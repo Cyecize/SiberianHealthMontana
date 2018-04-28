@@ -97,12 +97,14 @@
         </section>
         <section class="our_client">
             <h4 class="title"><span class="text">Категории</span></h4>
-            <div class="row">
+            <div class="row categories-bottom">
                 {% for category in informator.getMainCategories() %}
                     {% if category.id != 0 %}
-                    <div class="span1 category-box">
-                        <a href="{{ path('category_details', {id:category.id}) }}">{{ category.categoryName }}</a>
-                    </div>
+                        <a href="{{ path('category_details', {id:category.id}) }}">
+                            <div class="span1 category-box">
+                                {{ category.categoryName|upper }}
+                            </div>
+                        </a>
                     {% endif %}
                 {% endfor %}
             </div>

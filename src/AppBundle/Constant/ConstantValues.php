@@ -40,4 +40,9 @@ class ConstantValues
      * @var int
      */
     public static $MAX_UPLOAD_FILESIZE = 6291456;
+
+    /**
+     * @var float
+     */
+    public static $DELIVERY_PRICE = 3.99;
 }

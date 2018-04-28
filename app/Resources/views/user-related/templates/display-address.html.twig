@@ -5,7 +5,7 @@
         <p>{{ address.residential }}, {{ address.townShip.townName }}</p>
     </div>
 
-    <div id="address-action-btns" class="span5 pull-right" style="">
+    <div id="address-action-btns" class="span5 pull-right">
         <button class="btn btn-default edit-address-btn" addrId = "{{ address.id }}">Редакция</button>
         <button class="btn btn-default delete-address-btn" addrId="{{ address.id }}" ><a href="{{ path('remove_address', {addressId:address.id}) }}">Изтриване </a> </button>
     </div>

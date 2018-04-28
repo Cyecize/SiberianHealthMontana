@@ -14,6 +14,7 @@ use AppBundle\Constant\PathConstants;
 use AppBundle\Entity\CartProduct;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductCategory;
+use AppBundle\Entity\UserAddress;
 use AppBundle\Service\CartManager;
 use AppBundle\Service\ProductManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -28,13 +29,15 @@ class ProductController extends Controller
     function isUserLogged()
     {
         return $this->get('security.authorization_checker')->isGranted('ROLE_USER', 'ROLES');  //when user is logged
-
     }
 
     /**
      * @Route("/{catPath}/product/{id}", name="product_details", defaults={"id"=null})
+     * @param $id
+     * @param ProductManager $productManager
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function specificProductAction(Request $request, $catPath, $id, ProductManager $productManager)
+    public function specificProductAction($id, ProductManager $productManager)
     {
         if ($id == null)
             return $this->redirectToRoute("homepage");
@@ -56,6 +59,10 @@ class ProductController extends Controller
 
     /**
      * @Route("/category/{id}", name="category_details", defaults={"id"=null})
+     * @param Request $request
+     * @param ProductManager $productManager
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function categoryAction(Request $request, ProductManager $productManager, $id)
     {
@@ -78,8 +85,6 @@ class ProductController extends Controller
         $offset = $currentPage * $productPageLimit - $productPageLimit;
 
 
-
-
         return $this->render("default/products-page.html.twig",
             [
                 'category' => $category,
@@ -92,7 +97,58 @@ class ProductController extends Controller
     }
 
     /**
+     * @Route("/shopping-cart", name="shopping_cart")
+     * @param Request $request
+     * @param CartManager $cartManager
+     * @param ProductManager $productManager
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function shoppingCartAction(Request $request, CartManager $cartManager, ProductManager $productManager)
+    {
+
+        $arr = $cartManager->getDefaultCartCookie();
+        $products = $cartManager->forgeProductsFromCookie($arr, $this->getDoctrine()->getManager());
+
+        $price = 0;
+        foreach ($products as $catPr) {
+            $price += $catPr->getQuantity() * $catPr->getProduct()->getPrice();
+        }
+
+        return $this->render('default/shopping-cart.html.twig',
+            [
+                'products' => $products,
+                'isEmpty' => count($arr) < 1,
+                'totalPrice' => round($price, 2),
+            ]);
+    }
+
+    /**
+     * @Route("/cart/checkout", name="shopping_cart_checkout")
+     * @param Request $request
+     * @param CartManager $cartManager
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function checkoutAction(Request $request, CartManager $cartManager)
+    {
+        $products = $cartManager->getDefaultCartCookie();
+        $totalPrice = 0.0;
+        $addresses = array();
+        if($this->isUserLogged()){
+            $addresses = $this->getDoctrine()->getRepository(UserAddress::class)->findBy(array('userId'=>$this->getUser()->getId()));
+        }
+
+        return $this->render('default/checkout.html.twig',
+            [
+                'addresses'=>$addresses,
+            ]);
+    }
+
+    /**
      * @Route("/addToCart/{prodId}", name="add_to_cart", defaults={"prodId"=null})
+     * @param Request $request
+     * @param $prodId
+     * @param CartManager $cartManager
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addToCartAction(Request $request, $prodId, CartManager $cartManager)
     {
@@ -119,29 +175,9 @@ class ProductController extends Controller
     }
 
     /**
-     * @Route("/shopping-cart", name="shopping_cart")
-     */
-    public function shoppingCartAction(Request $request, CartManager $cartManager, ProductManager $productManager)
-    {
-
-        $arr = $cartManager->getDefaultCartCookie();
-        $products = $cartManager->forgeProductsFromCookie($arr, $this->getDoctrine()->getManager());
-
-        $price = 0;
-        foreach ($products as $catPr) {
-            $price += $catPr->getQuantity() * $catPr->getProduct()->getPrice();
-        }
-
-        return $this->render('default/shopping-cart.html.twig',
-            [
-                'products' => $products,
-                'isEmpty' => count($arr) < 1,
-                'totalPrice' => round($price, 2),
-            ]);
-    }
-
-    /**
      * @Route("/erase-shopping-cart", name="erase_cart")
+     * @param CartManager $cartManager
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function clearCartAction(CartManager $cartManager)
     {
@@ -158,6 +194,9 @@ class ProductController extends Controller
 
     /**
      * @Route("/remove-product-from-cart/{count}", name="remove_product_from_cart")
+     * @param CartManager $cartManager
+     * @param $count
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function removeProdFromCartAction(CartManager $cartManager, $count)
     {
@@ -176,6 +215,8 @@ class ProductController extends Controller
 
     /**
      * @Route("/check-for-prods", name="check_for_cart_prods")
+     * @param CartManager $cartManager
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function checkForProductsInCartAction(CartManager $cartManager)
     {
@@ -191,21 +232,22 @@ class ProductController extends Controller
             ]);
     }
 
-
     /**
      * @Route("/search", name="search_product", methods={"POST"})
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchAction(Request $request){
-        $searchName= $request->get('searchText');
+    public function searchAction(Request $request)
+    {
+        $searchName = $request->get('searchText');
 
         //$products =
 
         return $this->render('default/search-result.html.twig',
             [
-               'searchText'=>$searchName,
+                'searchText' => $searchName,
             ]);
     }
+
 
 }
