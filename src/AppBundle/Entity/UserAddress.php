@@ -264,7 +264,7 @@ class UserAddress
     public function isAddressValid(): bool
     {
         if ($this->fullName == null || $this->phoneNumber == null || $this->address == null || $this->postCode == null || $this->fullName == "" || $this->phoneNumber == ""
-            || $this->address == "")
+            || $this->address == "" || $this->residential == null || $this->residential == "")
             return false;
         return true;
     }

@@ -8,24 +8,29 @@
 
     <section class="main-content">
         <div class="row">
-            {% if error %}
-                <div style="" class="clearfix">
-                    <div class="span7">
-                        <h4 class="alert alert-danger">{{ error }}</h4>
+            <div class="span9">
+                {% if error %}
+                    <div style="" class="clearfix">
+                        <div class="span7">
+                            <h4 class="alert alert-danger">{{ error }}</h4>
+                        </div>
                     </div>
-                </div>
-            {% endif %}
-            {% if info %}
-                <div style="" class="clearfix">
-                    <div class="span7">
-                        <h4 class="alert alert-success">{{ info }}</h4>
+                {% endif %}
+                {% if info %}
+                    <div style="" class="clearfix">
+                        <div class="span7">
+                            <h4 class="alert alert-success">{{ info }}</h4>
+                        </div>
                     </div>
-                </div>
-            {% endif %}
-            {% include 'template-parts/login-form.html.twig' %}
+                {% endif %}
+                {% include 'template-parts/login-form.html.twig' %}
 
-            {% include 'template-parts/register-form.html.twig' %}
-
+                {% include 'template-parts/register-form.html.twig' %}
+            </div>
+            <div class="span3 col">
+                {% embed 'template-parts/randomizer.html.twig' %} {% endembed %}
+                {% embed 'template-parts/best-sellers.html.twig' %} {% endembed %}
+            </div>
         </div>
     </section>
 {% endblock %}

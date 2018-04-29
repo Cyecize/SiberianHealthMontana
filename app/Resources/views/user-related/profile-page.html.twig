@@ -10,12 +10,7 @@
     {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':"Профил"} %}
 
     <div class="main-content clearfix">
-        {% if error %}
-            <h3 class="alert alert-danger">{{ error }}</h3>
-        {% endif %}
-        {% if success %}
-            <h3 class="alert alert-success">{{ success }}</h3>
-        {% endif %}
+        {% embed 'template-parts/error-success-pair.html.twig' %} {% endembed %}
 
         <section class="section">
             <div class="alert alert-info">

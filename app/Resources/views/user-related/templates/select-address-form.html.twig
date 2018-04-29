@@ -1,11 +1,12 @@
 <div>
+    <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/js/css/modal.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('styles/themes/css/radio-buttons-styles.css') }}">
     {% for address in addresses %}
     <section class="choose-address-box">
         <div>
             <section class="custom-radio-holder">
                 <li>
-                    <input type="radio" id="addr{{ address.id }}" name="selectedAddress">
+                    <input addrId = "{{ address.id }}" class="actual-radio" type="radio" id="addr{{ address.id }}" name="selectedAddress">
                     <label for="addr{{ address.id }}" class="radio-label"></label>
                     <div class="check"></div>
                 </li>
@@ -30,3 +31,8 @@
 </script>
 
 </div>
+
+{% block javascripts %}
+    <script src="{{ asset('styles/themes/js/js/modal-manager.js') }}"></script>
+    <script src="{{ asset('styles/themes/js/js/profile-page.js') }}"></script>
+{% endblock %}

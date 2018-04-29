@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Регистрирана потъчка {% endblock %}
+
+{% block body %}
+
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':'Регистрирана поръчка'} %}
+
+    <section class="main-content clearfix">
+        <div class="row">
+            <div class="span9">
+                <h3 class="alert alert-success">Вашата пъръчка беше приета!</h3>
+                <p>ID на поръчката {{ order.id }}</p>
+                <a href="{{ path('homepage') }}">Към началната страница</a>
+            </div>
+            <div class="span3 col">
+                {% embed 'template-parts/randomizer.html.twig' %}{% endembed %}
+                {% embed  'template-parts/best-sellers.html.twig' %} {% endembed %}
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}

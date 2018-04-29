@@ -4,7 +4,6 @@
 
 {% block stylesheets %}
     <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/css/form-main.css') }}">
-    <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/js/css/modal.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -12,30 +11,62 @@
     {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':'Потвърждаване на поръчка'} %}
 
     <section class="main-content clearfix">
-        <h3>Данни за поръчката</h3>
-        <hr>
-        <section class="alert alert-info">
-            <h4>Адрес за доставка</h4>
-            {% if app.user %}
-                <h5>Съществуващ потребител</h5>
-                <h6>Изберете адрес</h6>
-                {% embed 'user-related/templates/select-address-form.html.twig' %}{% endembed %}
-            {% else %}
+        <div class="row">
+            <div class="span9">
+                {% embed 'template-parts/error-success-pair.html.twig' %} {% endembed %}
+                <h3>Данни за поръчката</h3>
+                <hr>
+                <section class="alert alert-info">
+                    <h4>Адрес за доставка</h4>
+                    {% if app.user %} <!--  USER IS LOGGED IN -->
+                        <h5>Съществуващ потребител</h5>
+                        <h6>Изберете адрес</h6>
+                        {% embed 'user-related/templates/select-address-form.html.twig' %}{% endembed %}
+                        {% embed 'user-related/templates/address-modal.html.twig' %} {% endembed %}
+                        <div>
+                            <br>
+                            <button type="button" id="newAddressBtn" class="btn btn-default"><i class="fa fa-plus"></i>
+                                <span>Нов адрес</span>
+                            </button>
+                        </div>
+                    {% else %} <!-- USER IS NOT LOGGED IN -->
+                        {% embed 'template-parts/non-user-address-order.html.twig' %} {% endembed %}
+                    {% endif %}
+                </section>
 
-            {% endif %}
-            <div>
-                <br>
-                <button id="newAddressBtn" class="btn btn-default"><i class="fa fa-plus"></i> <span>Нов адрес</span>
-                </button>
+                <section class="alert alert-info">
+                    <h4>Начин на доставка:</h4>
+                    <p>Продуктите се доставят до адрес или до офис с наложен платеж</p>
+                    <p>Ако предпочитате доставката ви да е до офис, моля напишете името на офиса в полето за
+                        <strong>адрес</strong>.</p>
+                </section>
+
+                <section class="alert alert-info" style="color:green">
+                    <h4>Вашата количка</h4>
+                    <p>Цена: <strong>{{ totalPrice|format(2) }}</strong></p>
+                    {% for prod in products %}
+                        <small>{{ prod.title }}</small><br>
+                    {% endfor %}
+                </section>
+
+                <section>
+                    <div class="pull-right">
+                        <button class="btn btn-primary" id="checkoutBtn">Закупуване</button>
+                    </div>
+                </section>
             </div>
-        </section>
-
-        {% embed 'user-related/templates/address-modal.html.twig' %} {% endembed %}
+            <div class="span3 col">
+                {% embed 'template-parts/randomizer.html.twig' %} {% endembed %}
+                {% embed 'template-parts/best-sellers.html.twig' %} {% endembed %}
+            </div>
+        </div>
     </section>
+    {% if app.user %}
+        <script src="{{ asset('styles/themes/js/js/logged-user-checkout.js') }}"></script>
+    {% else %}
+        <script src="{{ asset('styles/themes/js/js/annonymous-user-checkout.js') }}"></script>
+    {% endif %}
 
 {% endblock %}
 
-{% block javascripts %}
-    <script src="{{ asset('styles/themes/js/js/modal-manager.js') }}"></script>
-    <script src="{{ asset('styles/themes/js/js/profile-page.js') }}"></script>
-{% endblock %}
+

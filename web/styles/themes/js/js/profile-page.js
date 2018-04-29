@@ -16,14 +16,20 @@ $(function () {
     document.getElementById('newAddressBtn').addEventListener('click', function () {
         addressModalManager.showModal();
         addressModalManager.clearFields();
-        form.attr('action', '/user/address/add');
+        var urlAddress = '/user/address/add';
+        if(document.location.pathname === "/cart/checkout")
+            urlAddress = urlAddress + "?redirect=checkout";
+        form.attr('action', urlAddress);
         addressModalTitle.text('Добавяне на адрес');
     });
 
     $('.edit-address-btn').click(function () {
         var id = $(this).attr('addrId');
         addressModalManager.showModal();
-        form.attr('action', '/user/address/edit/' + id);
+        var urlAddress = '/user/address/edit/' + id;
+        if(document.location.pathname === "/cart/checkout")
+            urlAddress = urlAddress + "?redirect=checkout";
+        form.attr('action', urlAddress);
         addressModalTitle.text('Редакция на адрес');
 
         $.ajax({
@@ -52,6 +58,8 @@ $(function () {
             error: console.error
         })
     });
+
+
 
     document.addEventListener('keyup', function (ev) {
         if (ev.keyCode === 27) addressModalManager.hideModal();

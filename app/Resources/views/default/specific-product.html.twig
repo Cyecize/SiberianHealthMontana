@@ -25,7 +25,7 @@
                             <strong>Наличност:</strong>
                             {% if product.quantity == 0 %}
                             <span class=" alert-danger">Изчерпан</span>
-                            {% else %}
+                        {% else %}
                             <span class=" alert-success">В наличност</span>
                             {% endif %}<br>
                         </address>
@@ -41,7 +41,7 @@
                             </div>
 
                             <br>
-                            <button id="addToCartBtn" class="btn btn-inverse" type="button">Добави в количката</button>
+                            <button id="addToCartButton" class="btn btn-inverse" type="button">Добави в количката</button>
                         </form>
                     </div>
                 </div>
@@ -142,35 +142,44 @@
 
 
     </script>
-
     {% block javascripts %}
         <script>
-            let queryResult = {'isDone': false, "data": null};
-            $('#addToCartBtn').click(function () {
-                    var quantity = Number($('#quantity').val());
-                    if (isNaN(quantity) || quantity !== Math.floor(quantity)) {
-                        queryResult.data = "Невалидно число за количество!";
-                        queryResult.isDone = true;
-                        informUser();
-                        return;
-                    }
-                    var size = $('#sizeSelect').find(":selected").text();
-                    $.ajax({
-                        url: "/addToCart/" + {{ product.id }} +"?quantity=" + quantity,
-                    }).done(function (data) {
-                        triigerCartUpdate();
-                        queryResult.data = data;
-                        queryResult.isDone = true;
-                        informUser();
-                    });
-                }
-            );
+            $(function () {
+                var queryResult = {'isDone': false, "data": null};
+                $('#addToCartButton').unbind('click');
 
-            function informUser() {
-                if (queryResult.isDone)
-                    alert(queryResult.data);
-                queryResult.isDone = false;
-            }
+                $('#addToCartButton').on('click',(function (e) {
+                        e.preventDefault();
+                        var quantity = Number($('#quantity').val());
+                        if (isNaN(quantity) || quantity !== Math.floor(quantity)) {
+                            queryResult.data = "Невалидно число за количество!";
+                            queryResult.isDone = true;
+                            informUser();
+                            return;
+                        }
+                        var size = $('#sizeSelect').find(":selected").text();
+
+                        function callAjax() {
+                            $.ajax({
+                                url: "/addToCart/" + {{ product.id }} +"?quantity=" + quantity,
+                                success: function (data) {
+                                    triigerCartUpdate();
+                                    queryResult.data = data;
+                                    queryResult.isDone = true;
+                                    informUser();
+                                }
+                            });
+                        }
+                        callAjax();
+                    }
+                ));
+
+                function informUser() {
+                    if (queryResult.isDone)
+                        alert(queryResult.data);
+                    queryResult.isDone = false;
+                }
+            });
         </script>
     {% endblock %}
 

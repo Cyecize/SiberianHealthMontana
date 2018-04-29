@@ -99,6 +99,14 @@ class UserController extends Controller
         $address = new UserAddress();
         $address->setUserId($user->getId());
 
+        $redirection = $request->get('redirect');
+        if($redirection == null)
+            $redirection = "profile";
+        $redirections = [
+            'checkout'=>'shopping_cart_checkout',
+            'profile'=>'profile_page'
+        ];
+
         $form = $this->createForm(UserAddressType::class, $address);
         $form->handleRequest($request);
 
@@ -107,7 +115,7 @@ class UserController extends Controller
             try {
                 $address = $this->createAddress($address);
             } catch (Exception $e) {
-                return $this->redirectToRoute('profile_page', ['error' => $e->getMessage()]);
+                return $this->redirectToRoute($redirections[$redirection], ['error' => $e->getMessage()]);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -115,7 +123,7 @@ class UserController extends Controller
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('profile_page', ['success' => "Успешно добавен адрес"]);
+        return $this->redirectToRoute($redirections[$redirection], ['success' => "Успешно добавен адрес"]);
     }
 
     /**
@@ -176,9 +184,17 @@ class UserController extends Controller
     {
         $user = $this->getUser();
         $addressToEdit = $this->getDoctrine()->getRepository(UserAddress::class)->findOneBy(array('id' => $addressId));
+        $redirection = $request->get('redirect');
+        if($redirection == null)
+            $redirection = "profile";
+        $redirections = [
+            'checkout'=>'shopping_cart_checkout',
+            'profile'=>'profile_page'
+        ];
+
 
         if ($addressToEdit == null || $user->getId() != $addressToEdit->getUserId()) {
-            return $this->redirectToRoute('profile_page', ['error' => "Имаше проблем с редакцията!"]);
+            return $this->redirectToRoute($redirections[$redirection], ['error' => "Имаше проблем с редакцията!"]);
         }
 
         $address = new UserAddress();
@@ -201,14 +217,14 @@ class UserController extends Controller
                 $entityManager->merge($addressToEdit);
                 $entityManager->flush();
 
-                return $this->redirectToRoute('profile_page', ['success' => "Успешно редактирахте вашия адрес"]);
+                return $this->redirectToRoute($redirections[$redirection], ['success' => "Успешно редактирахте вашия адрес"]);
 
             } catch (Exception $e) {
-                return $this->redirectToRoute('profile_page', ['error' => $e->getMessage()]);
+                return $this->redirectToRoute($redirections[$redirection], ['error' => $e->getMessage()]);
             }
         }
 
-        return $this->redirectToRoute('profile_page', ['error' => 'Имаше грешка с изпращането на формата. Ако продължавате да имате този проблем, свържете се с нас']);
+        return $this->redirectToRoute($redirections[$redirection], ['error' => 'Имаше грешка с изпращането на формата. Ако продължавате да имате този проблем, свържете се с нас']);
 
     }
 

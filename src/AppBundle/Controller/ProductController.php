@@ -14,11 +14,16 @@ use AppBundle\Constant\PathConstants;
 use AppBundle\Entity\CartProduct;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductCategory;
+use AppBundle\Entity\ProductOrder;
+use AppBundle\Entity\Township;
 use AppBundle\Entity\UserAddress;
+use AppBundle\Form\UserAddressType;
 use AppBundle\Service\CartManager;
 use AppBundle\Service\ProductManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use function Sodium\add;
 use Symfony\Bundle\SecurityBundle\Tests\Functional\Bundle\AclBundle\Entity\Car;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -130,16 +135,162 @@ class ProductController extends Controller
      */
     public function checkoutAction(Request $request, CartManager $cartManager)
     {
-        $products = $cartManager->getDefaultCartCookie();
+        $rawProds = $cartManager->getDefaultCartCookie();
+
+        if (count($rawProds) < 1) {
+            return $this->redirectToRoute('homepage', ['error' => "Количката ви е празна"]);
+        }
+        $productRepo = $this->getDoctrine()->getRepository(Product::class);
+        $products = [];
         $totalPrice = 0.0;
+        foreach ($rawProds as $id => $quantity) {
+            $pp = $productRepo->findOneBy(array('id' => $id));
+            if ($pp != null) {
+                $totalPrice += $pp->getPrice() * $quantity;
+                $products[] = $pp;
+            }
+        }
+
+        $error = $request->get('error');
+        $success = $request->get('success');
         $addresses = array();
-        if($this->isUserLogged()){
-            $addresses = $this->getDoctrine()->getRepository(UserAddress::class)->findBy(array('userId'=>$this->getUser()->getId()));
+        if ($this->isUserLogged()) {
+            $addresses = $this->getDoctrine()->getRepository(UserAddress::class)->findBy(array('userId' => $this->getUser()->getId()));
         }
 
         return $this->render('default/checkout.html.twig',
             [
-                'addresses'=>$addresses,
+                'addresses' => $addresses,
+                'error' => $error,
+                'success' => $success,
+                'totalPrice' => $totalPrice,
+                'products' => $products,
+            ]);
+    }
+
+    /**
+     * @Route("/cart/checkout/commit", name="checkout_commit")
+     * @param Request $request
+     * @param CartManager $cartManager
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function commitCheckoutAction(Request $request, CartManager $cartManager)
+    {
+
+        $address = new UserAddress();
+        $form = $this->createForm(UserAddressType::class, $address);
+        $form->handleRequest($request);
+        $email = $request->get('email');
+        $state = array('status' => 0, 'message' => null, 'orderId' => null);
+
+        if (!$address->isAddressValid() || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $state['status'] = 500;
+            $state['message'] = "Невалиден адрес!";
+            goto  escape;
+        }
+        $township = $this->getDoctrine()->getRepository(Township::class)->findOneBy(array('id' => $address->getTownshipId()));
+        if ($township == null) {
+            $state['status'] = 500;
+            $state['message'] = "Невалидна област!";
+            goto  escape;
+        }
+        $address->setTownship($township);
+
+        $rawProds = $cartManager->getDefaultCartCookieRaw();
+        $order = new ProductOrder();
+        $order->setShoppingCart($rawProds);
+        $order->setEmail($email);
+        $order->addAddress($address);
+
+        $totalPrice = $this->getTotalPriceForCart($cartManager);
+        $order->setTotalPrice($totalPrice);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($order);
+        $entityManager->flush();
+
+        $cartManager->unsetDefaultCartCookie();
+
+        $state['status'] = 200;
+        $state['message'] = "OK";
+        $state['orderId'] = $order->getId();
+
+        escape:
+        return $this->render('queries/generic-query-aftermath-message.twig',
+            [
+                'error' => json_encode($state),
+            ]);
+    }
+
+    /**
+     * @Route("/cart/checkout/commit/logged", name="checkout_commit_logged")
+     * @param Request $request
+     * @param CartManager $cartManager
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function commitCheckoutLoggedAction(Request $request, CartManager $cartManager)
+    {
+        $state = array('status' => 0, 'message' => null, 'orderId' => null);
+
+        if (!$this->isUserLogged()) {
+            $state['status'] = 401;
+            $state['message'] = "Unauthorized";
+            goto  escape;
+        }
+
+        $selectedAddressId = $request->get('address');
+        $address = $this->getDoctrine()->getRepository(UserAddress::class)->findOneBy(array('id' => $selectedAddressId));
+        if ($address == null) {
+            $state['status'] = 404;
+            $state['message'] = "Адресът не беше избран";
+            goto  escape;
+        }
+
+        if ($address->getUserId() != $this->getUser()->getId()) {
+            $state['status'] = 401;
+            $state['message'] = "Адресът не е намерен!";
+            goto  escape;
+        }
+
+        $totalPrice = $this->getTotalPriceForCart($cartManager);
+        $order = new ProductOrder();
+        $order->addAddress($address);
+        $order->setEmail($this->getUser()->getEmail());
+        $order->setTotalPrice($totalPrice);
+        $order->setShoppingCart($cartManager->getDefaultCartCookieRaw());
+        $order->setUserId($this->getUser()->getId());
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($order);
+        $entityManager->flush();
+
+        $cartManager->unsetDefaultCartCookie();
+        $cartManager->mergeFromCookieToDb($this->getUser(), []);
+        $state['status'] = 200;
+        $state['message'] = "OK";
+        $state['orderId'] = $order->getId();
+        escape:
+        return $this->render('queries/generic-query-aftermath-message.twig',
+            [
+                'error' => json_encode($state),
+            ]);
+    }
+
+    /**
+     * @Route("/cart/checkout/success/{id}", name="checkout_commit_success", defaults={"id"=null})
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function registeredOrderAction($id)
+    {
+        $order = $this->getDoctrine()->getRepository(ProductOrder::class)->findOneBy(array('id' => $id));
+        if ($order == null) {
+            return $this->redirectToRoute('homepage', ['error' => "Имаше проблем с вашата поръчка, моля свържете се с нас!"]);
+        }
+
+        return $this->render('default/order-registered.html.twig',
+            [
+                'order' => $order,
             ]);
     }
 
@@ -250,4 +401,31 @@ class ProductController extends Controller
     }
 
 
+    /**
+     * @Route("/cart/checkout/login", name="checkout_login_redirect")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function loginToCheckoutAction()
+    {
+        return $this->redirectToRoute('shopping_cart_checkout');
+    }
+
+
+    /**
+     * @param CartManager $manager
+     * @return float
+     */
+    private function getTotalPriceForCart(CartManager $manager): float
+    {
+        $prodRepo = $this->getDoctrine()->getRepository(Product::class);
+        $prodJson = $manager->getDefaultCartCookie();
+        $totalPrice = 0.0;
+        foreach ($prodJson as $id => $quantity) {
+            $p = $prodRepo->findOneBy(array('id' => $id));
+            if ($p != null)
+                $totalPrice += $p->getPrice() * $quantity;
+        }
+        return $totalPrice;
+    }
 }

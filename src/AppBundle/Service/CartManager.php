@@ -48,7 +48,9 @@ class CartManager
         return $arr;
     }
 
-
+    /**
+     * @return array
+     */
     public function getDefaultCartCookie(): array
     {
         if (isset($_COOKIE[ConstantValues::$CART_COOKIE_NAME])) {
@@ -57,12 +59,27 @@ class CartManager
         return array();
     }
 
-    public function unsetDefaultCartCookie()
+    /**
+     * @return string
+     */
+    public function getDefaultCartCookieRaw() : string {
+        if (isset($_COOKIE[ConstantValues::$CART_COOKIE_NAME])) {
+            return $_COOKIE[ConstantValues::$CART_COOKIE_NAME];
+        }
+        return "";
+    }
+
+    /**
+     * @return  void
+     */
+    public function unsetDefaultCartCookie() : void
     {
         setcookie(ConstantValues::$CART_COOKIE_NAME, null, time() - ConstantValues::$COOKIE_LEASE_TIME, PathConstants::$COOKIE_DEFAULT_PATH);
     }
 
     /**
+     * @param $prods
+     * @param ObjectManager $entityManager
      * @return CartProduct[]
      */
     public function forgeProductsFromCookie($prods, ObjectManager $entityManager)
