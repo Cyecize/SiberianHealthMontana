@@ -17,6 +17,7 @@ class ProductRepository extends \Doctrine\ORM\EntityRepository
         $products = $qb
             ->select('product')
             ->where($qb->expr()->like('product.title', ':title'))
+            ->orWhere($qb->expr()->like('product.description', ':title'))
             ->setMaxResults(ConstantValues::$MAX_SEARCH_RESULTS)
             ->setParameter("title", "%$prodName%")
             ->getQuery()
