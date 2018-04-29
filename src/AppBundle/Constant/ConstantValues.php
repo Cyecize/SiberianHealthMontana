@@ -45,4 +45,9 @@ class ConstantValues
      * @var float
      */
     public static $DELIVERY_PRICE = 3.99;
+
+    /**
+     * @var int
+     */
+    public static $MAX_SEARCH_RESULTS = 60;
 }

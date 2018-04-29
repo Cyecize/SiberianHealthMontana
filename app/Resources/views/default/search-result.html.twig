@@ -3,7 +3,7 @@
 {% block title %} {{ informator.websiteName }}: {{ searchText }} {% endblock %}
 
 {% block body %}
-    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle': searchText} %}
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle': "Търсене за: " ~ searchText} %}
 
     <section class="main-content">
         <div class="row">
@@ -24,25 +24,28 @@
                     <ul>
 
                         {% if currentPage > 1 %}
-                            <li><a href="{{path('category_details', {"id":category.id, 'page':currentPage-1}) }}">Предишна</a></li>
+                            <li><a href="{{path('search_product', {"text":searchText, 'page':currentPage-1}) }}">Предишна</a></li>
                         {% endif %}
                         {% if allPages > 0 %}
                             {% for pageLink in range(1, allPages) %}
                                 <li class="{% if pageLink == currentPage %}active{% endif %}">
-                                    <a href="{{ path('category_details', {'id':category.id, 'page':pageLink}) }}">{{ pageLink }}</a>
+                                    <a href="{{ path('search_product', {'text':searchText, 'page':pageLink}) }}">{{ pageLink }}</a>
                                 </li>
                             {% endfor %}
                         {% else %}
-                            <h4 class="alert alert-info">Няма продукти в тази категория</h4>
+                            <h4 class="alert alert-info">Не бяха намерени продукти</h4>
                         {% endif %}
 
                         {% if currentPage < allPages %}
-                            <li><a href="{{path('category_details', {"id":category.id, 'page':currentPage+1}) }}">Следваща</a></li>
+                            <li><a href="{{path('search_product', {"text":searchText, 'page':currentPage+1}) }}">Следваща</a></li>
                         {% endif %}
                     </ul>
                 </div>
             </div>
-
+            <div class="span3 col">
+                {% embed 'template-parts/randomizer.html.twig' %} {% endembed %}
+                {% embed 'template-parts/best-sellers.html.twig' %} {% endembed %}
+            </div>
         </div>
     </section>
 

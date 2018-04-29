@@ -384,19 +384,44 @@ class ProductController extends Controller
     }
 
     /**
-     * @Route("/search", name="search_product", methods={"POST"})
+     * @Route("/search/{text}", name="search_product", methods={"POST", "GET"}, defaults={"text"=null})
      * @param Request $request
+     * @param $text
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchAction(Request $request)
+    public function searchAction(Request $request, $text)
     {
-        $searchName = $request->get('searchText');
+        $currentPage = 1;
+        if($request->get('page') != null){
+            if(intval($request->get('page') > 0))
+                $currentPage = $request->get('page');
+        }
+        $searchParam = $request->get('searchText');
+        if($searchParam == null)
+            $searchParam = $text;
 
-        //$products =
+        $prodRepo = $this->getDoctrine()->getRepository(Product::class);
+        $products = $prodRepo->findBy(array('id'=>$searchParam));
+        if($products == null){
+            $products = $prodRepo->findBy(array('sibirCode'=>$searchParam));
+        }
+
+        if($searchParam == null)
+            $searchParam = "";
+        if($products == null){
+            $products = $prodRepo->findByNameRegx($searchParam);
+        }
+
+        $allPages = ceil(count($products) / ConstantValues::$MAX_PRODUCTS_PER_PAGE);
+        $offset = $currentPage * ConstantValues::$MAX_PRODUCTS_PER_PAGE - ConstantValues::$MAX_PRODUCTS_PER_PAGE;
 
         return $this->render('default/search-result.html.twig',
             [
-                'searchText' => $searchName,
+                'searchText' => $searchParam,
+                'products'=>$products,
+                'offset'=>$offset,
+                'currentPage'=>$currentPage,
+                'allPages'=>$allPages,
             ]);
     }
 

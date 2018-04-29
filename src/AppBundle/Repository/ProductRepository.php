@@ -1,6 +1,8 @@
 <?php
 
 namespace AppBundle\Repository;
+use AppBundle\Constant\ConstantValues;
+use AppBundle\Entity\Product;
 
 /**
  * ProductRepository
@@ -10,4 +12,15 @@ namespace AppBundle\Repository;
  */
 class ProductRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findByNameRegx(string $prodName){
+        $qb = $this->createQueryBuilder('product');
+        $products = $qb
+            ->select('product')
+            ->where($qb->expr()->like('product.title', ':title'))
+            ->setMaxResults(ConstantValues::$MAX_SEARCH_RESULTS)
+            ->setParameter("title", "%$prodName%")
+            ->getQuery()
+            ->getResult();
+        return $products;
+    }
 }
