@@ -22,6 +22,10 @@ class DefaultController extends Controller
     //TODO WHEN UPDATING schema make sure that you remove the ProductCategoryForCreationClass
     /**
      * @Route("/", name="homepage")
+     * @param Request $request
+     * @param ProductManager $productManager
+     * @param BasicInformator $informator
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request, ProductManager $productManager, BasicInformator $informator)
     {
@@ -30,10 +34,10 @@ class DefaultController extends Controller
         // replace this example code with whatever you need
         $banners = $this->getDoctrine()->getRepository(HomeFlexBanner::class)->findBy(array('hidden' => false));
 
-        $trendingProds = $productManager->getTrendingProducts(ConstantValues::$MAX_PRODUCTS_PER_SLIDE, 0);
-        $trendingProdsP2 = $productManager->getTrendingProducts(ConstantValues::$MAX_PRODUCTS_PER_SLIDE, ConstantValues::$MAX_PRODUCTS_PER_SLIDE);
-        $newProds = $productManager->getNewestProducts(ConstantValues::$MAX_PRODUCTS_PER_SLIDE, 0);
-        $newProdsP2 = $productManager->getNewestProducts(ConstantValues::$MAX_PRODUCTS_PER_SLIDE, ConstantValues::$MAX_PRODUCTS_PER_SLIDE);
+        $trendingProds = $productManager->getTrendingProducts(ConstantValues::$MAX_PRODUCTS_PER_SLIDE, rand(0,10));
+        $trendingProdsP2 = $productManager->getTrendingProducts(ConstantValues::$MAX_PRODUCTS_PER_SLIDE, rand(10,20));
+        $newProds = $productManager->getNewestProducts(ConstantValues::$MAX_PRODUCTS_PER_SLIDE, rand(0,50));
+        $newProdsP2 = $productManager->getNewestProducts(ConstantValues::$MAX_PRODUCTS_PER_SLIDE, rand(50,110));
 
         return $this->render('default/index.html.twig', [
             'flexBanners' => $banners,

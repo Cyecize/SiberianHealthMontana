@@ -65,7 +65,16 @@ $('#menu > ul').superfish({
 
 
 //shopping cart stuff
-    var customEvent = new Event('triggerNoti');
+function createNewEvent(eventName) {
+    if(typeof(Event) === 'function') {
+        return  new Event(eventName);
+    }else{
+        var event = document.createEvent('Event');
+        event.initEvent(eventName, true, true);
+        return event;
+    }
+}
+    var customEvent =  createNewEvent('triggerNoti');
 
 // Listen for the event.
     var cartNotiCont = document.getElementById("cart-noti-holder");

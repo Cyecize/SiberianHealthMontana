@@ -21,7 +21,6 @@ var ModalManager = function (modalId) {
                 modal.hide();
             }
         }
-
     }
 
     function showModal() {
@@ -37,6 +36,6 @@ var ModalManager = function (modalId) {
     }
 
     return{
-        initialize, showModal, clearFields, hideModal
+        initialize:initialize, showModal:showModal, clearFields:clearFields, hideModal:hideModal //fuck you IE11 !!
     }
 };

@@ -56,7 +56,7 @@ class BasicInformator
     }
 
     public function getBestSellers() : array {
-       return $this->productManager->getTrendingProducts(ConstantValues::$MAX_PRODUCTS_PER_SLIDE, rand(0, 5));
+       return $this->productManager->getTrendingProducts(ConstantValues::$MAX_PRODUCTS_PER_SLIDE, rand(0, 20));
     }
 
     /**

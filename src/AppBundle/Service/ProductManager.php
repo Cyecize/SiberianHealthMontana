@@ -52,7 +52,7 @@ class ProductManager
 
     public function getRandomProducts($numberOfProds){
         return $this->entityManagerInterface->getRepository(Product::class)->findBy(
-          array('hidden'=>false), array(), $numberOfProds, rand(0,8)
+          array('hidden'=>false), array(), $numberOfProds, rand(0,120)
         );
     }
 

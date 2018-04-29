@@ -1,5 +1,5 @@
 $(function () {
-    var addressModalManager = new ModalManager;
+    var addressModalManager =  ModalManager();
     addressModalManager.initialize("addressModal");
 
     var form = $('#addressForm');
@@ -41,7 +41,7 @@ $(function () {
                 userAddressId.val(address['id']);
 
                 userTownship.find('option').removeAttr('selected');
-                userTownship.find('option').toArray().forEach(option=>{
+                userTownship.find('option').toArray().forEach(function (option) {
                     var opt = $(option);
                     if(Number(opt.val()) === address['townshipId']){
                         opt.attr('selected', true);
@@ -56,7 +56,6 @@ $(function () {
     document.addEventListener('keyup', function (ev) {
         if (ev.keyCode === 27) addressModalManager.hideModal();
     });
-
 
     //remove acc functions
     $('#removeAccountBtn').on('click',function () {
