@@ -1,0 +1,37 @@
+{% if notis %}
+    <small class="small-clean-text" onclick="window.location.replace('/get/notifications/mobile');">
+        Показване на цял екран
+    </small>
+    <hr class="noti-separator">
+    <!-- notifications  -->
+    {% for noti in notis %}
+        <div class="notification-container" id="notification-content">
+            <div class="notification-content">
+                <a href="/notifications/show/{{ noti.id }}" class="notification-hyperlink">
+                    <p class="notification-text">{{ noti.notificationType }}
+                        <small>(някаква дата)</small>
+                    </p>
+                    <p class="notification-text">{{ noti.content|raw }}</p>
+                </a>
+            </div>
+            <div class="notification-remover">
+                <button class="btn btn-default notification-btn remove-noti-btn" notificationId="{{ noti.id }}">Премахни</button>
+            </div>
+        </div>
+    {% endfor %}
+    <!-- end notifications -->
+    <hr class="noti-separator">
+    <small class="small-clean-text" id="removeAllNotificationsBtn">
+        Изчистване на всички
+    </small>
+
+{% else %}
+    <span class="alert alert-success fat-text"
+          style="position:absolute; top:0; left: 0; right: 0; bottom: 0; height: 100%; padding: 0px; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 1.3em;"> Нямате известия!
+    </span>
+    <style>
+        #hidden-noti-bar{
+            overflow: hidden;
+        }
+    </style>
+{% endif %}

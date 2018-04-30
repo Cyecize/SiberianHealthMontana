@@ -15,6 +15,7 @@
     <link href="{{ asset('styles/bootstrap/css/bootstrap-responsive.min.css') }}" rel="stylesheet">
     <link href="{{ asset('styles/themes/css/bootstrappage.css') }}" rel="stylesheet"/>
 
+
     <!-- global styles -->
     <link href="{{ asset('styles/themes/css/flexslider.css') }}" rel="stylesheet"/>
     <link href="{{ asset('styles/themes/css/main.css') }}" rel="stylesheet"/>
@@ -24,6 +25,8 @@
     <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC"/>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- end fonts-->
 
     <!-- scripts-->
@@ -49,20 +52,119 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
 <div id="wrapper" class="container">
 
     <div id="top-bar" class="container">
-        <div class="row">
+        <div class="row" id="base-layout-row">
             <div class="span4">
                 <form method="POST" class="search_form" action="{{ path('search_product') }}">
-                    <input name="searchText" type="text" class="input-block-level search-query"
-                           Placeholder="Търсете лекарство" style="color:black;">
+                    <input id="search-field" name="searchText" type="text" class="input-block-level search-query"
+                           Placeholder="Търсете лекарство">
                 </form>
             </div>
             <div class="span8">
                 <div class="account pull-right">
                     <ul class="user-menu">
+                        {% if app.user %}
+                            <li class="notification-icon-holder">
+                                <i class="material-icons custom-message-icon" id="notification-icon">sms<span
+                                            class="tiny-badge"></span></i>
+                                <div id="hidden-noti-bar">
+
+                                </div>
+                            </li>
+
+                            <script>
+                                $(function () {
+                                    var notificationIcon = document.getElementById('notification-icon');
+
+                                    var NotificationModalManager = (function () {
+                                        var notificationBar = document.getElementById('hidden-noti-bar');
+
+                                        //private methods
+                                        function hasClickedOnParentChild(children, event) {
+                                            var isCl = false;
+                                            for (var i = 0; i < children.length; i++) {
+                                                if (children[i] == event.target)
+                                                    isCl = true;
+                                            }
+                                            return isCl;
+                                        }
+
+
+                                        function fillNotificationBarWithData(htmlData) {
+                                            $(notificationBar).html(htmlData);
+                                            attachDynamicEvents();
+                                        }
+
+                                        function removeNotification(id) {
+                                            $.ajax({
+                                                type:"POST",
+                                                url:"{{ path('remove_single_notification') }}",
+                                                data:{notificationId:id},
+                                                success:fillNotificationBarWithData,
+                                                error:console.error
+                                            });
+                                        }
+
+                                        function attachDynamicEvents() {
+                                            $('#removeAllNotificationsBtn').on('click', NotificationModalManager.removeAllNotifications);
+                                            $('.remove-noti-btn').on('click', function (event) {
+                                                event.preventDefault();
+                                                var id = $(this).attr('notificationId');
+                                                removeNotification(id);
+                                            });
+                                        }
+
+
+                                        //public methods
+                                        function showOrHideForm() {
+                                            if ($(notificationBar).css('display') == "none")
+                                                $(notificationBar).show(100);
+                                            else
+                                                $(notificationBar).hide(100);
+                                        }
+
+                                        function onDocumentClick(event) {
+                                            if (event.target !== notificationBar && event.target !== notificationIcon && !hasClickedOnParentChild(notificationBar.getElementsByTagName('*'), event))
+                                                $(notificationBar).hide(100);
+                                        }
+
+                                        function update() {
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "{{ path('get_notifications') }}",
+                                                success: fillNotificationBarWithData,
+                                                error: console.error
+                                            });
+                                        }
+
+                                        function removeAllNotifications() {
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "{{ path('remove_notifications') }}",
+                                                success: fillNotificationBarWithData,
+                                                error: console.error
+                                            });
+                                        }
+
+                                        return {
+                                            showOrHideForm: showOrHideForm,
+                                            onDocumentClick: onDocumentClick,
+                                            update: update,
+                                            removeAllNotifications: removeAllNotifications
+                                        };
+                                    })();
+
+
+                                    $(notificationIcon).on('click', NotificationModalManager.showOrHideForm);
+                                    document.addEventListener('click', NotificationModalManager.onDocumentClick);
+                                    NotificationModalManager.update();
+                                    var clock = setInterval(NotificationModalManager.update, 1000);
+
+                                });
+                            </script>
+                        {% endif %}
                         <li>
                             <a href="{{ path('profile_page') }}"> {% if app.user %}{{ app.user.username }} {% else %}Профил{% endif %}</a>
                         </li>
-
                         <li><a href="{{ path('shopping_cart') }}">
                                 <div class="cart-notify-container" id="cart-noti-holder">
                                     Количка
@@ -132,8 +234,11 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
                         <h4>Сибирско здраве Монтана: </h4>
                         <ul class="nav">
                             <li><a href="tel:1234567"><i class="fa fa-phone" aria-hidden="true"></i> 0878680118</a></li>
-                            <li><a href="mailto:ceci2205@abv.bg"><i class="fa fa-map-marker" aria-hidden="true"></i> Монтана: Площад Славейков</a></li>
-                            <li><a href="https://facebook.com" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i> facebook</a></li>
+                            <li><a href="mailto:ceci2205@abv.bg"><i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    Монтана: Площад Славейков</a></li>
+                            <li><a href="https://facebook.com" target="_blank"><i class="fa fa-facebook"
+                                                                                  aria-hidden="true"></i> facebook</a>
+                            </li>
 
                         </ul>
                     </div>
@@ -164,9 +269,8 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
     <script src="{{ asset('styles/themes/js/common.js') }}"></script>
     <script src="{{ asset('styles/themes/js/jquery.flexslider-min.js') }}"></script>
 
-
     <script>
-        $(function() {
+        $(function () {
             var menuId = $('#menu');
             var logoAnchor = $('#logo-anchor');
             var topMainMenu = $('#top-main-menu');

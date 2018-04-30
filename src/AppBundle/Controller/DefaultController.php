@@ -8,7 +8,7 @@ use AppBundle\Entity\ProductCategory;
 use AppBundle\Entity\SocialLink;
 use AppBundle\Form\ProductCategoryType;
 use AppBundle\Repository\SocialLinkRepository;
-use AppBundle\Service\BasicInformator;
+use AppBundle\Service\TwigInformer;
 use AppBundle\Service\ProductManager;
 use AppBundle\Util\CharacterTranslator;
 use AppBundle\Util\DirectoryCreator;
@@ -24,10 +24,10 @@ class DefaultController extends Controller
      * @Route("/", name="homepage")
      * @param Request $request
      * @param ProductManager $productManager
-     * @param BasicInformator $informator
+     * @param TwigInformer $informator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request, ProductManager $productManager, BasicInformator $informator)
+    public function indexAction(Request $request, ProductManager $productManager, TwigInformer $informator)
     {
 
         $informator->setError($request->get('error'));

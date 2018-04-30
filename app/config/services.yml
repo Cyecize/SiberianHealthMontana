@@ -46,6 +46,9 @@ services:
     AppBundle\Service\ProductCategoryManager:
           arguments:
           $em: '@Doctrine\ORM\EntityManagerInterface'
+    AppBundle\Service\DoctrineNotificationManager:
+          arguments:
+          $em: '@Doctrine\ORM\EntityManagerInterface'
 
     account.security_listener:
             class: AppBundle\EventListener\LoginListener
@@ -56,4 +59,4 @@ services:
 twig:
   globals:
         ga_tracking: UA-xxxxx-x
-        informator: '@AppBundle\Service\BasicInformator'
+        informator: '@AppBundle\Service\TwigInformer'

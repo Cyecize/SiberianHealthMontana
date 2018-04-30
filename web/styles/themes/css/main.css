@@ -949,6 +949,114 @@ end checkout custom styles
 	profile page
 
  */
+
+/**
+base layout custom styles
+ */
+
+#search-field {
+    color: black;
+}
+
+#base-layout-row {
+    position: relative;
+}
+
+#hidden-noti-bar {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    position: absolute;
+    top: 30px;
+    width: 400px;
+    max-height: 400px;
+    min-height: 70px;
+    right: 1%;
+    color: black;
+    background: #fff;
+    border: solid 1px #e6e6e6;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, .0975);
+    box-shadow: 0 0 5px rgba(0, 0, 0, .0975);
+    display: none;
+    overflow: auto;
+    z-index: 1000000;
+}
+
+.notification-icon-holder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.custom-message-icon {
+    color: rebeccapurple;
+    font-size: 18px !important;
+}
+
+#hidden-noti-bar .small-clean-text {
+    text-transform: none;
+    color: #3897f0;
+    margin: 2px;
+    cursor: pointer;
+}
+
+#hidden-noti-bar .noti-separator {
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+#hidden-noti-bar .notification-container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    padding: 5px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#hidden-noti-bar .notification-hyperlink {
+    color: inherit;
+    text-decoration: none;
+}
+
+#hidden-noti-bar .notification-hyperlink:hover {
+    color: #3897f0;
+}
+
+#hidden-noti-bar .notification-btn {
+    background: #3897f0;
+    border-color: #3897f0;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+#hidden-noti-bar .notification-btn:hover {
+    -webkit-transition: color 0.2s;
+    -moz-transition: color 0.2s;
+    -ms-transition: color 0.2s;
+    -o-transition: color 0.2s;
+    transition: color 0.2s;
+    background: darkgray;
+}
+
+#hidden-noti-bar .seen-true {
+    background: darkgrey;
+}
+
+#hidden-noti-bar .notification-text {
+    text-transform: none;
+    padding: 0px;
+    margin: 0 auto;
+    font-size: 1.1em;
+}
+
+.fat-text{
+    font-weight:700;
+}
+
+/**
+end base layout styles
+ */
 .address-medium {
     background: white;
     position: relative;
@@ -1008,8 +1116,6 @@ end checkout custom styles
 /**
 	end index custom styles
  */
-
-
 
 /* Responsive
 ----------------------------------------------------------------------------- */
@@ -1106,14 +1212,20 @@ end checkout custom styles
     /**
 	end index custom styles
  */
-
     /**
     checkout
      */
     .choose-address-box {
         display: block;
     }
+
     /**
     end checkout
+     */
+    /**
+    base layout
+     */
+    /**
+    end base layout
      */
 }

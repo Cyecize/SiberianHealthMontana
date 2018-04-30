@@ -12,6 +12,7 @@ namespace AppBundle\Controller;
 use AppBundle\Constant\ConstantValues;
 use AppBundle\Constant\PathConstants;
 use AppBundle\Entity\CartProduct;
+use AppBundle\Entity\Notification;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductCategory;
 use AppBundle\Entity\ProductOrder;
@@ -19,6 +20,7 @@ use AppBundle\Entity\Township;
 use AppBundle\Entity\UserAddress;
 use AppBundle\Form\UserAddressType;
 use AppBundle\Service\CartManager;
+use AppBundle\Service\DoctrineNotificationManager;
 use AppBundle\Service\ProductManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -172,9 +174,11 @@ class ProductController extends Controller
      * @Route("/cart/checkout/commit", name="checkout_commit")
      * @param Request $request
      * @param CartManager $cartManager
+     * @param DoctrineNotificationManager $notificationManager
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      */
-    public function commitCheckoutAction(Request $request, CartManager $cartManager)
+    public function commitCheckoutAction(Request $request, CartManager $cartManager,DoctrineNotificationManager $notificationManager)
     {
 
         $address = new UserAddress();
@@ -209,6 +213,8 @@ class ProductController extends Controller
         $entityManager->persist($order);
         $entityManager->flush();
 
+        $this->sendOrderNotificationToAdmins($notificationManager, $order->getId());
+
         $cartManager->unsetDefaultCartCookie();
 
         $state['status'] = 200;
@@ -226,9 +232,11 @@ class ProductController extends Controller
      * @Route("/cart/checkout/commit/logged", name="checkout_commit_logged")
      * @param Request $request
      * @param CartManager $cartManager
+     * @param DoctrineNotificationManager $notificationManager
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      */
-    public function commitCheckoutLoggedAction(Request $request, CartManager $cartManager)
+    public function commitCheckoutLoggedAction(Request $request, CartManager $cartManager,DoctrineNotificationManager $notificationManager)
     {
         $state = array('status' => 0, 'message' => null, 'orderId' => null);
 
@@ -263,6 +271,8 @@ class ProductController extends Controller
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($order);
         $entityManager->flush();
+
+        $this->sendOrderNotificationToAdmins($notificationManager, $order->getId());
 
         $cartManager->unsetDefaultCartCookie();
         $cartManager->mergeFromCookieToDb($this->getUser(), []);
@@ -439,6 +449,7 @@ class ProductController extends Controller
 
     /**
      * @param CartManager $manager
+     * @throws \Exception
      * @return float
      */
     private function getTotalPriceForCart(CartManager $manager): float
@@ -452,5 +463,14 @@ class ProductController extends Controller
                 $totalPrice += $p->getPrice() * $quantity;
         }
         return $totalPrice;
+    }
+
+    private function sendOrderNotificationToAdmins(DoctrineNotificationManager $notificationManager, int $orderId){
+        $message = ConstantValues::$NEW_ORDER_MESSAGE;
+        $message = preg_replace('/{{id}}/', $orderId, $message);
+        $notification = new Notification();
+        $notification->setContent($message);
+        $notification->setNotificationType("Поръчка");
+        $notificationManager->sendToAdmins($notification);
     }
 }

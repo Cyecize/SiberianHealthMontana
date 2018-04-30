@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Constant\Config;
+use AppBundle\Entity\Notification;
 use AppBundle\Entity\Township;
 use AppBundle\Entity\User;
 use AppBundle\Entity\UserAddress;
@@ -326,6 +327,57 @@ class UserController extends Controller
             [
                 'error' => 'account removed',
             ]);
+    }
+
+    /**
+     * @Route("/user/notifications/request", name="get_notifications")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     */
+    public function loadNotificationsAction(){
+        $user = $this->getUser();
+        $notifications = $this->getDoctrine()->getRepository(Notification::class)->findBy(array('targetId'=>$user->getId()));
+
+        return $this->render('user-related/templates/notification-update-result.html.twig',
+            [
+               'notis'=>$notifications,
+            ]);
+    }
+
+    /**
+     * @Route("/user/notifications/remove-all", name="remove_notifications")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     */
+    public function removeAllNotisAction(){
+        $notifications = $this->getDoctrine()->getRepository(Notification::class)->findBy(array('targetId'=>$this->getUser()->getId()));
+        if($notifications != null){
+            $entityManager  = $this->getDoctrine()->getManager();
+            foreach ($notifications as $notification)
+                $entityManager->remove($notification);
+            $entityManager->flush();
+        }
+
+        return $this->render('user-related/templates/notification-update-result.html.twig',
+            [
+                'notis'=>null,
+            ]);
+    }
+
+    /**
+     * @Route("/user/notifications/remove", name="remove_single_notification")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function removeSingleNotificationAction(Request $request){
+        $id = $request->get('notificationId');
+        $notification = $this->getDoctrine()->getRepository(Notification::class)->findOneBy(array('id'=>$id));
+        if($notification != null && $notification->getTargetId() == $this->getUser()->getid()){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($notification);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('get_notifications');
     }
 
 

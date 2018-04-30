@@ -21,7 +21,7 @@ use AppBundle\EventListener\LoginListener;
 use AppBundle\Form\ProductCategoryType;
 use AppBundle\Form\ProductType;
 use AppBundle\Repository\SocialLinkRepository;
-use AppBundle\Service\BasicInformator;
+use AppBundle\Service\TwigInformer;
 use AppBundle\Service\ProductManager;
 use AppBundle\Util\CharacterTranslator;
 use AppBundle\Util\DirectoryCreator;
@@ -209,7 +209,7 @@ class AdministrativeController extends Controller
      * @Route("/admin/addNewProduct", name="add_new_product")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
-    public function addNewProductAction(Request $request, BasicInformator $basicInformator)
+    public function addNewProductAction(Request $request, TwigInformer $basicInformator)
     {
         if (!$this->isUserPrivileged($this->getUser()))
             return $this->redirectToRoute('homepage');

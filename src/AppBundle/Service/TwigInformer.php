@@ -22,7 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
-class BasicInformator
+class TwigInformer
 {
 
     private $entityManagerInterface;
@@ -30,7 +30,7 @@ class BasicInformator
     private $productManager;
 
     /**
-     * BasicInformator constructor.
+     * TwigInformer constructor.
      * @param EntityManagerInterface $em
      * @param ProductManager $productManagerr
      */

@@ -50,4 +50,10 @@ class ConstantValues
      * @var int
      */
     public static $MAX_SEARCH_RESULTS = 60;
+
+    /**
+     * @var string
+     * TODO function will replace the {{id}} with order ID
+     */
+    public static $NEW_ORDER_MESSAGE = 'Нова поръчка! Номер на поръчката -> <a href="/admin/order/{{id}}">{{id}}</a>';
 }
