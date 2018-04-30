@@ -172,8 +172,11 @@ class AdministrativeController extends Controller
     /**
      * @Route("/admin/focused-link/{id}", name="get_focused_social_link", defaults={"id"=null})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function editSoialLinksAction(Request $request, $id)
+    public function editSocialLinkAction(Request $request, $id)
     {
         if (!$this->isUserPrivileged($this->getUser()))
             return $this->redirectToRoute('homepage');
@@ -192,11 +195,11 @@ class AdministrativeController extends Controller
     /**
      * @Route("/admin/edit-social-links", name="edit_social_links", defaults={"id"=null})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editSocialLinksAction(Request $request)
     {
-
-
         return $this->render('administrative/edit-social-links.html.twig',
             [
 
@@ -208,6 +211,9 @@ class AdministrativeController extends Controller
      *
      * @Route("/admin/addNewProduct", name="add_new_product")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @param TwigInformer $basicInformator
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function addNewProductAction(Request $request, TwigInformer $basicInformator)
     {
@@ -303,6 +309,83 @@ class AdministrativeController extends Controller
 
     }
 
+    /**
+     * @Route("/admin/product/edit", name="edit_product")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function editProductAction(Request $request){
+        if(!$this->isUserPrivileged($this->getUser()))
+            return $this->redirectToRoute('homepage');
+        $allCategories = $this->getDoctrine()->getRepository(ProductCategory::class)->findAll();
+        $error  = null;
+
+
+        $product = new Product();
+        $productId = $request->get('productId');
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+        if($form->isSubmitted()){
+            $productToEdit = $this->getDoctrine()->getRepository(Product::class)->findOneBy(array('id'=>$productId));
+            if($productToEdit == null){
+                $error = "Несъществуващ продукт!";
+                goto escape;
+            }
+
+            $productToEdit->setTitle($product->getTitle());
+            $productToEdit->setSibirCode($product->getSibirCode());
+            $productToEdit->setPrice($product->getPrice());
+            $productToEdit->setDescription($product->getDescription());
+            $productToEdit->setManufacturer($product->getManufacturer());
+            $productToEdit->setQuantity($product->getQuantity());
+            $productToEdit->setSoldCount($product->getSoldCount());
+            $productToEdit->setHidden($product->getHidden());
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->merge($productToEdit);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin_panel');
+        }
+
+        escape:
+
+        return $this->render('administrative/edit-product.html.twig',
+            [
+                'error'=>$error,
+                'categories'=>$allCategories,
+                'form'=>$form->createView(),
+                'product'=>$product,
+            ]);
+    }
+
+    /**
+     * @Route("/admin/category/relation/remove", name="remote_relation")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function removeRelationAction(Request $request){
+        if(!$this->isUserPrivileged($this->getUser()))
+            return $this->redirectToRoute('homepage');
+
+        $catId = $request->get('catId');
+        $prodId = $request->get('prodId');
+
+        $category = $this->getDoctrine()->getRepository(ProductCategory::class)->findOneBy(array('id'=>$catId));
+        $product = $this->getDoctrine()->getRepository(Product::class)->findOneBy(array('id'=>$prodId));
+
+        if($category != null && $product != null){
+            $em = $this->getDoctrine()->getManager(); // ...or getEntityManager() prior to Symfony 2.1
+            $connection = $em->getConnection();
+            $statement = $connection->prepare("DELETE FROM product_category_product WHERE product_category_id = $catId AND product_id = $prodId");
+            $statement->execute();
+        }
+
+        return $this->render('queries/generic-query-aftermath-message.twig',['error'=>""]);
+    }
+
 
     /**
      *
@@ -327,6 +410,60 @@ class AdministrativeController extends Controller
             $error['status'] = 200;
             $error['productId'] = $prod->getId();
             $error['productName'] = $prod->getTitle();
+        }
+
+        $error = json_encode($error);
+        return $this->render('queries/generic-query-aftermath-message.twig',
+            [
+                'error' => $error,
+            ]);
+    }
+
+    /**
+     * @Route("/admin/searchById/", name="search_prod_by_id", methods={"POST"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function searchProdByIdAction(Request $request){
+        if (!$this->isUserPrivileged($this->getUser()))
+            return $this->redirectToRoute('homepage');
+
+        $prodId = $request->get('productId');
+        $error = ['status' => 0,
+            'productId' => null,
+            'productName' => null,
+            'siberianCode'=>null,
+            'price'=>null,
+            'description'=>null,
+            'manufacturer'=>null,
+            'quantity'=>null,
+            'soldCount'=>null,
+            'hidden'=>null,
+            'categories'=>array(),
+        ];
+        if ($prodId == null) {
+            $error['status'] = 404;
+        }
+        $prod = $this->getDoctrine()->getRepository(Product::class)->findOneBy(array('id' => $prodId));
+        if ($prod == null) {
+            $error['status'] = 404;
+        } else {
+            $error['status'] = 200;
+            $error['productId'] = $prod->getId();
+            $error['productName'] = $prod->getTitle();
+            $error['siberianCode'] =  $prod->getSibirCode();
+            $error['price'] = $prod->getPrice();
+            $error['description'] = $prod->getDescription();
+            $error['manufacturer'] = $prod->getManufacturer();
+            $error['quantity'] = $prod->getQuantity();
+            $error['soldCount'] = $prod->getSoldCount();
+            $error['hidden'] = $prod->getHidden();
+
+            $categories = $prod->getCategories();
+            foreach ($categories as $category)
+                if($category->getId() != $prod->getCategoryId())
+                    $error['categories'][] = ['id'=>$category->getId(), 'name'=>$category->getCategoryName()];
         }
 
         $error = json_encode($error);

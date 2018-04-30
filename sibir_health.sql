@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 29, 2018 at 07:27 PM
+-- Generation Time: Apr 30, 2018 at 11:18 PM
 -- Server version: 5.7.21
 -- PHP Version: 7.2.4
 
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `home_flex_banners` (
   `header_three` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `hidden` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `home_flex_banners`
@@ -47,6 +47,33 @@ INSERT INTO `home_flex_banners` (`id`, `img_name`, `header_one`, `header_two`, `
 (4, 'b1.jpg', 'За контакти', '087666666', 'Text', 0),
 (5, 'b2.jpg', NULL, NULL, NULL, 0),
 (6, 'b3.jpg', NULL, NULL, NULL, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+DROP TABLE IF EXISTS `notifications`;
+CREATE TABLE IF NOT EXISTS `notifications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `target_id` int(11) NOT NULL,
+  `notification_type` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `date` datetime NOT NULL,
+  `content` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `target_id`, `notification_type`, `date`, `content`) VALUES
+(8, 16, 'Поръчка', '2018-04-30 21:56:42', 'Нова поръчка! Номер на поръчката -> <a href=\"/admin/order/24\">24</a>'),
+(10, 16, 'Поръчка', '2018-04-30 21:59:35', 'Нова поръчка! Номер на поръчката -> <a href=\"/admin/order/25\">25</a>'),
+(12, 16, 'Поръчка', '2018-04-30 22:17:12', 'Нова поръчка! Номер на поръчката -> <a href=\"/admin/order/26\">26</a>'),
+(14, 16, 'Поръчка', '2018-04-30 22:26:52', 'Нова поръчка! Номер на поръчката -> <a href=\"/admin/order/27\">27</a>'),
+(16, 16, 'Поръчка', '2018-04-30 22:43:58', 'Нова поръчка! Номер на поръчката -> <a href=\"/admin/order/28\">28</a>');
 
 -- --------------------------------------------------------
 
@@ -69,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `manufacturer` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_B3BA5A5A12469DE2` (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `products`
@@ -225,7 +252,8 @@ INSERT INTO `products` (`id`, `title`, `sibir_code`, `price`, `description`, `im
 (156, 'Паста за зъби \"Сибирска шипка\"- защита от парадонтоза', '403379', 12.26, '<p><span style=\"font-weight: bold;\">Природна паста за зъби \"Сибирска шипка\"</span></p><p><span style=\"font-weight: bold;\"><br></span><br>Естествените екстракти от сибирски растения, отглеждани в екологично чисти райони, предпазват зъбите и устната кухина.<br>В основата на пастата за зъби „Сибирска шипка” лежи съставеното по авторска рецепта съчетание на екстракт от сибирска шипка, четири целебни сибирски растения и червена глина, която служи като източник на най-необходимите минерални вещества в пастата. <br><br>\"Сибирска шипка - възстановяване и обновяване\" ефективно способства за възстановяването и заздравяването на тъканите на устната кухина, подобрява кръвоснабдяването на венците, притежава противовъзпалително действие, препятства развитието на пародонтоза, укрепва зъбния емайл и понижава риска от възникването на кариес.<br>Редовната употреба на пастата ефективно профилактира пародонтозата и кариеса.<br><br><span style=\"font-weight: bold;\">Активен състав: </span><br>*екстракт от сибирска шипка<br>*червена глина<br>*екстракти от сибирска хвойна <br>*екстракти от сибирска салвия<br>*екстракти от облепиха <br>*екстракт от лайка<br><br><span style=\"font-weight: bold;\">екстракт от сибирска шипка </span>- притежаващ ненадминато съдържание на витамин С, регулира съсирваемостта на кръвта и проницаемостта на кръвоносните съдове, оказва общоукрепващо и повишаващо имунитета действие.Шипката подобрява кръвоснабдяването на венците, способстват за възстановяването на тъканите в устната кухина, ефективно укрепват зъбния емайл.<br><span style=\"font-weight: bold;\"><br>червената глина </span>– подобряват кръвоснабдяването на венците, способстват за възстановяването на тъканите в устната кухина, ефективно укрепват зъбния емайл. Глината е природен източник на лесноусвояеми ценни минерални вещества, включително и на незаменимия за човека микроелемент желязо.<br><br><span style=\"font-weight: bold;\">екстракти от сибирска хвойна, салвия и лайка</span> - препятстват развитието на възпаления и пародонтоза, потискат активността на бактериите, причиняващи кариес.<br><br><span style=\"font-weight: bold;\">екстракт от облепиха</span> - това е едно от най-добрите средства за защита, които натуралните терапии отдавна използват за бързото зарастване на всяко увреждане на венците и устната лигавица.Поради наличието на облепиха, витамини и минерали зъбния емайл става светал, което помага за безопасно избелване на зъбите.<br><br><span style=\"font-weight: bold;\">Произведено в съответствие с изискванията на международните стандарти GMP cosmetics и ISO 9001.</span><br><br><span style=\"font-weight: bold;\">Паста за зъби „Сибирска шипка” за за възстановяване и обновяване НЕ съдържа:</span><br>*флуора<br>* лаурилсулфати<br>*парабени<br>*груби абразнивни компоненти<br>*консерванти<br>*синтетични ароматизатори и оцветители<br>*не е тествано върху животни<br><br><br><br></p>', '6f8dfd0820e7683e063700d52ce08def.jpg', 0, 10, 44, 0, 'Сибирско здраве');
 INSERT INTO `products` (`id`, `title`, `sibir_code`, `price`, `description`, `img_path`, `hidden`, `quantity`, `category_id`, `sold_count`, `manufacturer`) VALUES
 (157, 'Паста за зъби \"Сибирски прополис\" - природна профилактична паста за зъ', '403380', 12.26, '<p style=\"text-align: justify; \"><span style=\"font-weight: bold;\">Зъбна паста \"Сибирски прополис\" - природна профилактична паста за зъби</span></p><p style=\"text-align: justify; \"><span style=\"font-weight: bold; font-size: 12px;\">Натурална защита</span></p><p style=\"text-align: justify; \">Природна паста за зъби \"Сибирски прополис\" с уникален концентрат от сибирски целебни билки и пчелен прополис, който е в основата на знаменитата серия от едноименни балсами на Корпорация \"Сибирско здраве\".</p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\">Емулсията от пчелен прополис притежава антибактериално, противовъзпалително и ранозаздравяващо действие. Способства за намаляването на кървенето на венците, заздравява лигавицата на устната кухина.</span><br></p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\">Сибирските билки и етерични масла оказват целенасочено защитно, заздравяващо и възстановяващо действие на венците и лигавицата на устната кухина. Специално подбраният комплекс от екстракти и масла от бергения, салвия, лайка, здравец и облепиха в пастата за зъби \"Сибирски прополис\" прави процедурата по почистването на зъбите комплексна и високоефективна.</span><br></p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\">Натревият монофлуорфосфат осигурява профилактиката на кариеса. Флуорът повишава устойчивостта спрямо негативното въздействие на кариесогенните бактерии. Употребата на натриев монофлуорфосфат е призната от стоматолозите в света като един от най-ефективните начини за профилактика на кариеса.</span><br></p><p style=\"text-align: justify; \">&nbsp;П<span style=\"font-size: 12px;\">роизведено в съответствие с изискванията на международните стандарти GMPcosmetics и ISO 9001.</span></p><p style=\"text-align: justify; \">&nbsp;<span style=\"font-size: 12px;\">Съдържа не по-малко от 10% емулсия от натурален прополис и 5 активни екстракта от сибирски билки!</span></p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\">Не съдържа лаурилсулфат и груби абразивни компоненти!</span></p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\">Без антисептици и синтетични оцветители!</span></p><p style=\"text-align: justify; \"><span style=\"font-weight: bold; text-decoration: underline;\">Начин на употреба:</span> Почиствайте зъбите и венците не по-малко от два пъти дневно.&nbsp;</p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\">Децата да мият зъбите си в присъствието на възрастен и да използват от пастата количество колкото грахово зърно.&nbsp;</span><br></p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\">Препоръчва се пастата за зъби да се съчетава с балсама за уста \"Вълшебник\".</span><br></p><p style=\"text-align: justify; \"><span style=\"font-weight: bold;\"><span style=\"font-size: 12px;\">Активен състав</span><span class=\"Apple-tab-span\" style=\"font-size: 12px; white-space: pre;\">	</span><span style=\"font-size: 12px;\">&nbsp;</span></span><br></p><p></p><ul><li style=\"text-align: justify; \"><span style=\"font-size: 12px;\">пчелен прополис</span><br></li><li style=\"text-align: justify;\"><span style=\"font-size: 12px;\">екстракти и масла от бергения, салвия, лайка, облепиха, здравец,</span><br></li><li style=\"text-align: justify;\"><span style=\"font-size: 12px;\">натриев монофлуорфосфат</span><br></li></ul><p></p><p style=\"text-align: justify; \"><span style=\"font-weight: bold;\">Опаковка</span>: 75мл.</p>', '826f6c532de58c448605bf770efc234c.jpg', 0, 10, 44, 0, 'Сибирско здраве'),
-(158, 'Себер - Натурален растителен антиперспирант', '400961', 42.34, '<p style=\"text-align: justify; \"><span style=\"font-weight: bold;\">Себер</span></p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\">Натурален растителен антиперспирант за вътрешно действие</span><br></p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\">Проблемите с повишеното потоотделяне никога не се решават само с хигена или само с външно въздействие на кожата.Това се отнася както за ежедневното потоотделяне, така и за пристъпите на пототделяне при нервно напрежение и климактериум. Необходимо е да се реши проблема с повишеното потоотделянето в самия корен, а това означава, че е нужно да се въздейства непосредствено на системата на потните жлези. Натуралният растителен антиперспирант\"Сэбэр\" действа именно по този начин. Специално са разработени за тази задача селектирани екстракти от градински чай, мащерка и бергения, съдържащи голям брой особени химически вещества от групата на биофлаваноидите-кондензирани танини и дитерпенови съединения. При вътрешна употреба тези природни вещества притежават способността да подтискат прекомерната активност на потните жлези, да намалят интензивността на миризмата на потта,а също и да нормализират състоянито на вегетативната нервна система, регулираща работата на системата на потоотделянето.</span><br></p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\"><span style=\"font-weight: bold;\">Състав</span>: е</span><span style=\"font-size: 12px;\">сктракт от градински чай, екстракт от пълзяща мащерка, екстракт от листи.&nbsp;</span><br></p><p style=\"text-align: justify; \"><span style=\"font-weight: bold; text-decoration: underline;\">Начин на приложение: </span>По 2 капсули на ден по време на хранене. Курс на приемане - 1 месец. След направена пауза, курса се повтаря.</p><p style=\"text-align: justify; \"><span style=\"font-weight: bold;\">Опаковка</span>:&nbsp;<span style=\"font-size: 12px;\">60 капсули по 500мг</span></p>', '6310e19ffd3c66005633d14f3578c06b.jpg', 0, 10, 44, 0, 'Сибирско здраве');
+(158, 'Себер - Натурален растителен антиперспирант', '400961', 42.34, '<p style=\"text-align: justify; \"><span style=\"font-weight: bold;\">Себер</span></p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\">Натурален растителен антиперспирант за вътрешно действие</span><br></p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\">Проблемите с повишеното потоотделяне никога не се решават само с хигена или само с външно въздействие на кожата.Това се отнася както за ежедневното потоотделяне, така и за пристъпите на пототделяне при нервно напрежение и климактериум. Необходимо е да се реши проблема с повишеното потоотделянето в самия корен, а това означава, че е нужно да се въздейства непосредствено на системата на потните жлези. Натуралният растителен антиперспирант\"Сэбэр\" действа именно по този начин. Специално са разработени за тази задача селектирани екстракти от градински чай, мащерка и бергения, съдържащи голям брой особени химически вещества от групата на биофлаваноидите-кондензирани танини и дитерпенови съединения. При вътрешна употреба тези природни вещества притежават способността да подтискат прекомерната активност на потните жлези, да намалят интензивността на миризмата на потта,а също и да нормализират състоянито на вегетативната нервна система, регулираща работата на системата на потоотделянето.</span><br></p><p style=\"text-align: justify; \"><span style=\"font-size: 12px;\"><span style=\"font-weight: bold;\">Състав</span>: е</span><span style=\"font-size: 12px;\">сктракт от градински чай, екстракт от пълзяща мащерка, екстракт от листи.&nbsp;</span><br></p><p style=\"text-align: justify; \"><span style=\"font-weight: bold; text-decoration: underline;\">Начин на приложение: </span>По 2 капсули на ден по време на хранене. Курс на приемане - 1 месец. След направена пауза, курса се повтаря.</p><p style=\"text-align: justify; \"><span style=\"font-weight: bold;\">Опаковка</span>:&nbsp;<span style=\"font-size: 12px;\">60 капсули по 500мг</span></p>', '6310e19ffd3c66005633d14f3578c06b.jpg', 0, 10, 44, 0, 'Сибирско здраве'),
+(159, 'Пенис (edited)', '6666(edited)', 20.00, 'Много готен пенис(edited)', '57cbd2d3878ec2c65dc9c081024d8489.jpg', 1, 200, 30, 300, 'Cvetelinsko zdrave(edited)');
 
 -- --------------------------------------------------------
 
@@ -355,6 +383,7 @@ INSERT INTO `product_category_product` (`product_category_id`, `product_id`) VAL
 (30, 91),
 (30, 92),
 (30, 93),
+(30, 159),
 (31, 18),
 (31, 19),
 (31, 20),
@@ -568,14 +597,18 @@ CREATE TABLE IF NOT EXISTS `product_orders` (
   `post_code` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `township` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `product_orders`
 --
 
 INSERT INTO `product_orders` (`id`, `user_id`, `shopping_cart`, `total_price`, `accepted`, `full_name`, `email`, `phone_number`, `address`, `residential`, `post_code`, `township`) VALUES
-(16, 21, '{\"96\":2,\"95\":1,\"37\":1}', 79.35, 0, 'Педал', 'smoke@abv.bg', '125125', 'Адреса ми е готин', 'аегаег', '23535', 'Добрич');
+(24, 5, '{\"23\":1}', 31.19, 0, 'Tsvetelin Yakimov', 'cyecize@abv.bg', '0876736973', 'Mladost 1 Block 2', 'Бургаско', '3400', 'Бургас'),
+(25, 5, '{\"114\":1}', 22.51, 0, 'Tsvetelin Yakimov', 'cyecize@abv.bg', '0876736973', 'Mladost 1 Block 2', 'Бургаско', '3400', 'Бургас'),
+(26, 5, '{\"25\":1}', 40.1, 0, 'Tsvetelin Yakimov', 'cyecize@abv.bg', '0876736973', 'Mladost 1 Block 2', 'Бургаско', '3400', 'Бургас'),
+(27, NULL, '{\"47\":1}', 69.07, 0, 'Иван', 'iwav@abv.bg', 'Иван', 'иван', 'иван', '245', 'Благоевград'),
+(28, 5, '{\"22\":1,\"23\":1}', 82.67, 0, 'Tsvetelin Yakimov', 'cyecize@abv.bg', '0876736973', 'Mladost 1 Block 2', 'Бургаско', '3400', 'Бургас');
 
 -- --------------------------------------------------------
 
@@ -598,7 +631,7 @@ CREATE TABLE IF NOT EXISTS `shopping_carts` (
 
 INSERT INTO `shopping_carts` (`id`, `user_id`, `raw_products`) VALUES
 (4, 5, '[]'),
-(17, 21, '[]'),
+(17, 21, '{\"47\":1}'),
 (6, 8, '{\"13\":2,\"6\":1,\"11\":1}'),
 (7, 9, ''),
 (8, 10, ''),
@@ -723,7 +756,7 @@ CREATE TABLE IF NOT EXISTS `user_addresses` (
   `phone_number` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_6F2AF8F2B093DF6` (`township_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `user_addresses`
@@ -732,7 +765,8 @@ CREATE TABLE IF NOT EXISTS `user_addresses` (
 INSERT INTO `user_addresses` (`id`, `user_id`, `address`, `residential`, `post_code`, `township_id`, `full_name`, `phone_number`) VALUES
 (10, 22, 'Ул Игнат велики', 'Игнатово', 10025, 11, 'Игнат_Игнат', '0876767654'),
 (13, 21, 'ж.к. Младост 1, бл. 20, вход-г, ап. 2', 'awawf', 255, 2, 'Tsvetelin Nikolaev Yakimov', '+359876736973'),
-(14, 21, 'Адреса ми е готин', 'аегаег', 23535, 8, 'Педал', '125125');
+(14, 21, 'Адреса ми е готин', 'аегаег', 23535, 8, 'Педал', '125125'),
+(15, 5, 'Mladost 1 Block 2', 'Бургаско', 3400, 2, 'Tsvetelin Yakimov', '0876736973');
 
 --
 -- Constraints for dumped tables

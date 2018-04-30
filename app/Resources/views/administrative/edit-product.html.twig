@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Редакция на продукт {% endblock %}
+
+{% block stylesheets %}
+    <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/css/form-main.css') }}">
+{% endblock %}
+
+
+{% block body %}
+    {% include 'administrative/title-template-part.html.twig' with {'title':'Редакция продукт'} %}
+
+    {% if error %}
+        <h3 class="alert alert-danger">{{ error }}</h3>
+    {% endif %}
+
+    <div class="main-content clearfix">
+        <div class="span5">
+            <h3>Редакция на продукт</h3>
+            <div class="form-style-1">
+                <input type="number" placeholder="ProductId" id="searchProductIdField">
+                <input type="button" value="Search" id="searchProdToEditBtn">
+                <div id="searchProdResult"></div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data">
+                <ul class="form-style-1">
+                    <li>
+                        <label for="prodName">Име на продукт <span class="required">*</span></label>
+                        <input maxlength="70" id='prodName' type="text" name="product[title]" required
+                               class="field-long" value="{{ product.title }}">
+                    </li>
+                    <li>
+                        <label for="sibirCode">Сибирски код</label>
+                        <input id="sibirCode" type="text" required name="product[sibirCode]" placeholder="Сибирски код"
+                               class="field-long" value="{{ product.sibirCode }}">
+                    </li>
+
+                    <li>
+                        <label for="price">Цена</label>
+                        <input id="price" type="number" step="0.01" required name="product[price]" class="field-long"
+                               value="{{ product.price }}">
+                    </li>
+
+
+                    <li>
+                        <label for="description">Описание</label>
+                        <textarea id="description" required name="product[description]" class="field-long"
+                                  rows="10">{{ product.description }}</textarea>
+                    </li>
+
+                    <li>
+                        <label for="image">Снимка</label>
+                        <input id="image" type="file" accept="image/x-png,image/gif,image/jpeg"
+                               name="image[img_file]"
+                               class="field-long">
+                    </li>
+
+                    <li>
+                        <label for="manufacturer">Производител</label>
+                        <input id="manufacturer" type="text" required name="product[manufacturer]" class="field-long"
+                               placeholder="Производител" value="Сибирско здраве" {{ product.manufacturer }}>
+                    </li>
+
+                    <li>
+                        <label for="quantity">Налични бройки: </label>
+                        <input id="quantity" type="number" required name="product[quantity]" class="field-long"
+                               value="10">
+                    </li>
+
+                    <li>
+                        <label for="soldCount">Продадени бройки: </label>
+                        <input id="soldCount" type="number" required name="product[soldCount]" class="field-long"
+                               value="0">
+                    </li>
+
+                    <li>
+                        <label for="hiddenProd" style="display:inline-block;">Скрит продукт: </label>
+                        <input id="hiddenProd" type="checkbox" name="product[hidden]" style="display: inline-block;">
+                    </li>
+
+                    {{ form_row(form._token) }}
+                    <li>
+                        <input type="hidden" name="productId" id="productId">
+                        <input type="submit" value="Запази"/>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <div class="span3">
+            <h3>Категории </h3>
+            <div class="form-style-1">
+                <select id="selectCatToRemove">
+
+                </select>
+                <input type="button" value="Remove relation" id="removeCatRelationBtn">
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            var result = $('#searchProdResult');
+            var id = $('#searchProductIdField');
+            var catSelect = $('#selectCatToRemove');
+
+           $('#searchProdToEditBtn').on('click',function () {
+                $.ajax({
+                    type:"POST",
+                    url:"{{ path('search_prod_by_id') }}",
+                    data:{productId:id.val()},
+                    success:function (data) {
+                        var resp = JSON.parse(data);
+                        if(resp['status'] !== 200){
+                            result.show();
+                            result.text(resp['status']);
+                            return;
+                        }
+                        result.hide();
+                        $('#prodName').val(resp['productName']);
+                        $('#productId').val(resp['productId']);
+                        $('#sibirCode').val(resp['siberianCode']);
+                        $('#price').val(resp['price']);
+                        $('#description').text(resp['description']);
+                        $('#manufacturer').val(resp['manufacturer']);
+                        $('#quantity').val(resp['quantity']);
+                        $('#soldCount').val(resp['soldCount']);
+                        $('#hiddenProd').prop("checked", resp['hidden']);
+
+                        catSelect.html('');
+                        for (var i = 0; i < resp['categories'].length; i++) {
+                            var cat = resp['categories'][i];
+                            catSelect.append($(`<option value="${resp['categories'][i]['id']}">${resp['categories'][i]['name']}</option>`))
+                        }
+                    },
+                    error:console.error
+                });
+
+
+                $('#removeCatRelationBtn').on('click',function () {
+                   var catId= catSelect.val();
+                   var prodId = $('#productId').val();
+
+                   if(!confirm('Remote relation?'))
+                       return;
+                    $.ajax({
+                        type:'POST',
+                        url:"{{ path('remote_relation') }}",
+                        data:{catId:catId, prodId:prodId},
+                        success:function () {
+                            $('#searchProdToEditBtn').trigger('click');
+                        },
+                        error:console.error
+                    })
+                });
+           });
+        });
+    </script>
+{% endblock %}
