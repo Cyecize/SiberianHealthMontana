@@ -80,7 +80,7 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
                                     <span class="notify-bubble">1</span>
                                 </div>
                             </a></li>
-                        <li><a href="/">Закупуване</a></li>
+                        <li><a href="{{ path('shopping_cart_checkout') }}">Закупуване</a></li>
                         {% if app.user %}
                             <li><a href="{{ path('security_logout') }}">Изход</a></li>
                         {% else %}
@@ -159,10 +159,11 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
                         <div class="about" id="about">
                             <p class="cookiefont">{{ informator.WEBSITE_NAME_PART_ONE }}
                                 <span>{{ informator.WEBSITE_NAME_PART_TWO }}</span></p>
-                            <p>Това е магазин за дрехи, играчки и др. Някой ден ще съм напълно сигурен за какво точно е
-                                този
-                                магазин.
-                                Междувременно заповядайте в сайта на Преттy Gal</p>
+                            <p>За Корпорация "Сибирско здраве"
+
+                                Нашият основен приоритет е здравето на човека!
+
+                                Корпорация "Сибирско здраве" е основана през 1996 година в Новосибирск. През всичките тези години ние активно разработваме и пускаме на пазара широка линия патентовани хранителни добавки както и натурална козметика.</p>
                             <br/>
 
                             <div class="footer-icons" id="cats">

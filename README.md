@@ -1,5 +1,5 @@
 Siberian Health Montana! 
-And online shop for herb medicine which sells products made by "Siberian Health".
+An online shop for herb medicine which sells products made by "Siberian Health".
 
 Basic functionalities:
 -> Search products
