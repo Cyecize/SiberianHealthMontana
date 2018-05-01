@@ -274,6 +274,13 @@ class ProductController extends Controller
 
         $this->sendOrderNotificationToAdmins($notificationManager, $order->getId());
 
+        $notification = new Notification();
+        $notification->setNotificationType("Изпратена поръчка!");
+        $orderId = $order->getId();
+
+        $notification->setContent("<b>Вашата поръчка беше доставена до нас!</b><p>Очаквайте обаждане за потвърждаване на поръчка номер:" .  $orderId ."</p>");
+        $notificationManager->sendToUser($this->getUser(), $notification);
+
         $cartManager->unsetDefaultCartCookie();
         $cartManager->mergeFromCookieToDb($this->getUser(), []);
         $state['status'] = 200;

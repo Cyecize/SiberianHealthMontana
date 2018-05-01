@@ -4,10 +4,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Constant\ConstantValues;
 use AppBundle\Entity\HomeFlexBanner;
+use AppBundle\Entity\Notification;
 use AppBundle\Entity\ProductCategory;
 use AppBundle\Entity\SocialLink;
 use AppBundle\Form\ProductCategoryType;
 use AppBundle\Repository\SocialLinkRepository;
+use AppBundle\Service\DoctrineNotificationManager;
 use AppBundle\Service\TwigInformer;
 use AppBundle\Service\ProductManager;
 use AppBundle\Util\CharacterTranslator;
@@ -51,13 +53,46 @@ class DefaultController extends Controller
 
     /**
      * @Route("/contacts", name="contacts")
+     * @param Request $request
+     * @param DoctrineNotificationManager $notificationManager
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      */
-    public function contactsAction(Request $request)
+    public function contactsAction(Request $request, DoctrineNotificationManager $notificationManager)
     {
+        $error = null;
+        $info = null;
+
+        $name = $request->get('name');
+        $email = $request->get('email');
+        $message = $request->get('body');
+
+        if($name != null){
+            if($email == null || $message == null){
+                $error = "Поля попълнете всички полета!";
+                goto escape;
+            }
+
+            $msgSkeleton = ConstantValues::$NEW_CONTACT_US_MESSAGE;
+            $msg = preg_replace('/{{question}}/', $message, $msgSkeleton);
+            $msg = preg_replace('/{{email}}/', $email, $msg);
+            $msg = preg_replace('/{{name}}/', $name, $msg);
+
+            $notification = new Notification();
+            $notification->setNotificationType("Запитване");
+            $notification->setContent($msg);
+
+            $notificationManager->sendToAdmins($notification);
+
+            $info = "Вашето запитване беше изпратено!";
+        }
+
+        escape:
 
         return $this->render("default/contact-us.html.twig",
             [
-
+                'error'=>$error,
+                'success'=>$info,
             ]);
     }
 

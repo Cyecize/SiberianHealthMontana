@@ -183,5 +183,13 @@ class Notification
         return $this->date->format("d.m,Y (h:i:s)");
     }
 
+
+    public function getSummary(){
+        if (strlen($this->getContent()) < 50){
+            return $this->getContent();
+        }else
+            return substr($this->getContent(), 0,49);
+    }
+
 }
 

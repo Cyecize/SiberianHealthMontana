@@ -27,7 +27,9 @@ class DoctrineNotificationManager
 
     function sendToUser(User $user, Notification $notification): void
     {
-        // TODO: Implement sendToUser() method.
+        $notification->setTargetId($user->getId());
+        $this->entityManager->persist($notification);
+        $this->entityManager->flush();
     }
 
     function sendToGroup(array $users, Notification $notification): void

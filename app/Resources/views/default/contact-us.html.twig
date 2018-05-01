@@ -3,44 +3,45 @@
 {% block title %} Контакти {% endblock %}
     {% block body %}
 		<section class="google_map">
-			<iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src=https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d46371.49756301272!2d23.192383393314255!3d43.41425930571412!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40ab334595555555%3A0x5579283d6a5f4c18!2sFamily+Hotel+Ring!5e0!3m2!1sbg!2sbg!4v1518128019281"></iframe>
+			<iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6892.913691712945!2d23.214127501510816!3d43.41646140340127!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4754cb53179ca885%3A0x9da1b00b4058d32d!2z0YPQuy4g4oCe0KHQstC10YLQuCDQmtC70LjQvNC10L3RgiDQntGF0YDQuNC00YHQutC44oCcIDgxLCAzNDA0INC2LtC6LiDQn9C70LjRgdC60LAsINCc0L7QvdGC0LDQvdCw!5e0!3m2!1sbg!2sbg!4v1525191541669"></iframe>
 		</section>
-        {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':'Контакти'} %}
+		<br>
 		<section class="main-content">
 			<div class="row">
 				<div class="span5">
 					<div>
 						<h5>ДОПЪЛНИТЕЛНА ИНФОРМАЦИЯ</h5>
-						<p><strong>Тел.:</strong>&nbsp;0876736973<br>
-							<strong>Skype:</strong>&nbsp;ceci1238<br>
-							<strong>Email:</strong>&nbsp;<a href="#">ceci2205@abv.bg</a>
+						<p><strong>Тел.:</strong>&nbsp;0894413554<br>
+							<strong>Skype:</strong>&nbsp;deivko<br>
+							<strong>Email:</strong>&nbsp;<a href="mailto:leader971@abv.bg">leader971@abv.bg</a>
 						</p>
-						<p><strong>Адрес:<br>Град Монтана, Младост - 12 , Блок - 222, етаж -1 </strong></p>
+						<p><strong>Адрес:<br>Град Монтана: ул."Св.Кл.Охридски" №81 Блок Лилия</strong></p>
 						<br/>
 					</div>
 				</div>
 				<div class="span7">
 					<p>Можете да ни оставите въпрос относно някой продукт или доставка. Ще ви върнем отговор в най-скоро време.</p>
-					<form method="post" action="#">
+					{% embed 'template-parts/error-success-pair.html.twig' %} {% endembed %}
+					<form method="post" enctype="multipart/form-data">
 						<fieldset>
 							<div class="clearfix">
 								<label for="name"><span>Име:</span></label>
 								<div class="input">
-									<input tabindex="1" size="18" id="name" name="name" type="text" value="" class="input-xlarge" placeholder="Име">
+									<input required tabindex="1" size="18" id="name" name="name" type="text" value="" class="input-xlarge" placeholder="Име">
 								</div>
 							</div>
 
 							<div class="clearfix">
 								<label for="email"><span>Email:</span></label>
 								<div class="input">
-									<input tabindex="2" size="25" id="email" name="email" type="text" value="" class="input-xlarge" placeholder="Email">
+									<input required tabindex="2" size="25" id="email" name="email" type="text" value="" class="input-xlarge" placeholder="Email">
 								</div>
 							</div>
 
 							<div class="clearfix">
 								<label for="message"><span>Въпрос:</span></label>
 								<div class="input">
-									<textarea tabindex="3" class="input-xlarge" id="message" name="body" rows="7" placeholder="Въпрос"></textarea>
+									<textarea required tabindex="3" class="input-xlarge" id="message" name="body" rows="7" placeholder="Въпрос"></textarea>
 								</div>
 							</div>
 

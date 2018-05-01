@@ -23,8 +23,8 @@
 
     <!-- fonts -->
     <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway"/>
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Raleway"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Amatic+SC"/>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- end fonts-->
@@ -126,7 +126,7 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
             <section id="footer-bar">
                 <div class="row">
                     <div class="span3">
-                        <h4>Меню: </h4>
+                        <h5>Меню: </h5>
                         <ul class="nav">
                             <li><a href="/">Начало</a></li>
                             <li><a href="{{ path('contacts') }}">Контакти</a></li>
@@ -140,38 +140,45 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
                         </ul>
                     </div>
                     <div class="span4">
-                        <h4>Сибирско здраве Монтана: </h4>
+                        <h5>Контакти: </h5>
                         <ul class="nav">
-                            <li><a href="tel:1234567"><i class="fa fa-phone" aria-hidden="true"></i> 0878680118</a></li>
+                            <li><a href="tel:0894413554"><i class="fa fa-phone" aria-hidden="true"></i> 0894413554</a>
+                            </li>
                             <li><a href="mailto:ceci2205@abv.bg"><i class="fa fa-map-marker" aria-hidden="true"></i>
-                                    Монтана: Площад Славейков</a></li>
-                            <li><a href="https://facebook.com" target="_blank"><i class="fa fa-facebook"
-                                                                                  aria-hidden="true"></i> facebook</a>
+                                    Монтана: ул."Св.Кл.Охридски" №81 Блок Лилия </a></li>
+                            <li><a href="mailto:leader971@abv.bg"><i class="fa fa-envelope" aria-hidden="true"></i>
+                                    Email адрес</a></li>
+                            <li><a href="https://web.facebook.com/profile.php?id=100009129246783" target="_blank"><i
+                                            class="fa fa-facebook" aria-hidden="true"></i> facebook</a></li>
+                            <li><a href="skype:deivko?chat"><i class="fa fa-facebook" aria-hidden="true"></i> skype</a>
                             </li>
 
                         </ul>
                     </div>
-                    <div class="span5" id="logo-holder">
-                        <p class="cookiefont">{{ informator.WEBSITE_NAME_PART_ONE }}
-                            <span>{{ informator.WEBSITE_NAME_PART_TWO }}</span></p>
-                        <p>Това е магазин за дрехи, играчки и др. Някой ден ще съм напълно сигурен за какво точно е този
-                            магазин.
-                            Междувременно заповядайте в сайта на Преттy Gal</p>
-                        <br/>
+                    <div class="span5 about" id="logo-holder">
+                        <div class="about" id="about">
+                            <p class="cookiefont">{{ informator.WEBSITE_NAME_PART_ONE }}
+                                <span>{{ informator.WEBSITE_NAME_PART_TWO }}</span></p>
+                            <p>Това е магазин за дрехи, играчки и др. Някой ден ще съм напълно сигурен за какво точно е
+                                този
+                                магазин.
+                                Междувременно заповядайте в сайта на Преттy Gal</p>
+                            <br/>
 
-                        <div class="footer-icons" id="cats">
-                            {% for link in informator.getSocialLinks %}
-                                <div style="display:inline-block; color: white;">
-                                    <a href="{{ link.link }}" style="text-decoration: none;">
-                                        <span class="fa {{ link.icon }}"></span></a>
-                                </div>
-                            {% endfor %}
+                            <div class="footer-icons" id="cats">
+                                {% for link in informator.getSocialLinks %}
+                                    <div style="display:inline-block; color: white;">
+                                        <a href="{{ link.link }}" style="text-decoration: none;">
+                                            <span class="fa {{ link.icon }}"></span></a>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
             <section id="copyright">
-                <a href="http://yekimov-tech.com:8090" target="_blank">Z-Computers &copy; 2018 {{ ga_tracking }}</a>
+                <a href="http://yekimov-tech.com:8090" target="_blank">Z-Computers &copy; 2018 Tsvetelin Yakimov</a>
             </section>
         </footer>  {% endblock %}
 

@@ -962,6 +962,8 @@ base layout custom styles
     position: relative;
 }
 
+
+
 #hidden-noti-bar {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -992,6 +994,24 @@ base layout custom styles
 .custom-message-icon {
     color: rebeccapurple;
     font-size: 18px !important;
+    position: relative;
+}
+
+.tiny-badge{
+    display: inline-block;
+    /*background: red;*/
+    background: transparent;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    position: absolute;
+
+
+    font-size: 3px;
+    width: 7px;
+    height: 7px;
+    right:0px;
+
 }
 
 .notifications-section .small-clean-text {

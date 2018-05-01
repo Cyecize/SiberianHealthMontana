@@ -56,4 +56,10 @@ class ConstantValues
      * TODO function will replace the {{id}} with order ID
      */
     public static $NEW_ORDER_MESSAGE = 'Нова поръчка! Номер на поръчката -> <a href="/admin/order/{{id}}">{{id}}</a>';
+
+    /**
+     * @var string
+     * TODO replace email and question upon sending notification
+     */
+    public static $NEW_CONTACT_US_MESSAGE = 'Ново запитване! <br> Email: {{email}}, <br> Име: {{name}} <br> Въпрос: <br><p>{{question}}</p>';
 }

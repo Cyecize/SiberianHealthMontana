@@ -12,6 +12,9 @@
     <small class="small-clean-text removeAllNotificationsBtn" id="removeAllNotificationsBtn">
         Изчистване на всички
     </small>
+    <script>
+        $('.notification-icon-holder').find('.tiny-badge').css('background','red');
+    </script>
 
 {% else %}
     <span class="alert alert-success fat-text"
@@ -22,4 +25,7 @@
             overflow: hidden;
         }
     </style>
+    <script>
+        $('.notification-icon-holder').find('.tiny-badge').css('background','transparent');
+    </script>
 {% endif %}
