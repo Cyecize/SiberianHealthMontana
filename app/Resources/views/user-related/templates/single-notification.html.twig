@@ -1,0 +1,13 @@
+<div class="notification-container" id="notification-content">
+    <div class="notification-content">
+        <a href="/user/notifications/view/{{ noti.id }}" class="notification-hyperlink">
+            <p class="notification-text">{{ noti.notificationType }}
+                <small>({{ noti.dateAsString }})</small>
+            </p>
+            <p class="notification-text">{{ noti.content|raw }}</p>
+        </a>
+    </div>
+    <div class="notification-remover">
+        <button class="btn btn-default notification-btn remove-noti-btn" notificationId="{{ noti.id }}">Премахни</button>
+    </div>
+</div>

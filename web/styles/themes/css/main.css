@@ -994,19 +994,19 @@ base layout custom styles
     font-size: 18px !important;
 }
 
-#hidden-noti-bar .small-clean-text {
+.notifications-section .small-clean-text {
     text-transform: none;
     color: #3897f0;
     margin: 2px;
     cursor: pointer;
 }
 
-#hidden-noti-bar .noti-separator {
+.notifications-section .noti-separator {
     margin-top: 5px;
     margin-bottom: 0px;
 }
 
-#hidden-noti-bar .notification-container {
+.notifications-section .notification-container {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     display: flex;
     padding: 5px;
@@ -1014,23 +1014,23 @@ base layout custom styles
     align-items: center;
 }
 
-#hidden-noti-bar .notification-hyperlink {
+.notifications-section .notification-hyperlink {
     color: inherit;
     text-decoration: none;
 }
 
-#hidden-noti-bar .notification-hyperlink:hover {
+.notifications-section .notification-hyperlink:hover {
     color: #3897f0;
 }
 
-#hidden-noti-bar .notification-btn {
+.notifications-section .notification-btn {
     background: #3897f0;
     border-color: #3897f0;
     font-weight: 500;
     margin-right: 10px;
 }
 
-#hidden-noti-bar .notification-btn:hover {
+.notifications-section .notification-btn:hover {
     -webkit-transition: color 0.2s;
     -moz-transition: color 0.2s;
     -ms-transition: color 0.2s;
@@ -1039,11 +1039,11 @@ base layout custom styles
     background: darkgray;
 }
 
-#hidden-noti-bar .seen-true {
+.notifications-section .seen-true {
     background: darkgrey;
 }
 
-#hidden-noti-bar .notification-text {
+.notifications-section .notification-text {
     text-transform: none;
     padding: 0px;
     margin: 0 auto;

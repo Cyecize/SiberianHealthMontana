@@ -1,27 +1,15 @@
 {% if notis %}
-    <small class="small-clean-text" onclick="window.location.replace('/get/notifications/mobile');">
+    <small class="small-clean-text" onclick="window.location.replace('/user/notifications/mobile');">
         Показване на цял екран
     </small>
     <hr class="noti-separator">
     <!-- notifications  -->
     {% for noti in notis %}
-        <div class="notification-container" id="notification-content">
-            <div class="notification-content">
-                <a href="/notifications/show/{{ noti.id }}" class="notification-hyperlink">
-                    <p class="notification-text">{{ noti.notificationType }}
-                        <small>(някаква дата)</small>
-                    </p>
-                    <p class="notification-text">{{ noti.content|raw }}</p>
-                </a>
-            </div>
-            <div class="notification-remover">
-                <button class="btn btn-default notification-btn remove-noti-btn" notificationId="{{ noti.id }}">Премахни</button>
-            </div>
-        </div>
+       {% embed 'user-related/templates/single-notification.html.twig' %} {% endembed %}
     {% endfor %}
     <!-- end notifications -->
     <hr class="noti-separator">
-    <small class="small-clean-text" id="removeAllNotificationsBtn">
+    <small class="small-clean-text removeAllNotificationsBtn" id="removeAllNotificationsBtn">
         Изчистване на всички
     </small>
 

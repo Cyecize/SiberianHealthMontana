@@ -1,0 +1,27 @@
+{% extends  'base.html.twig' %}
+
+{% block title %} Известие: {{ notification.id }} {% endblock %}
+
+{% block  body %}
+
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':"Известие: " ~ notification.id} %}
+
+    <div class="main-content clearfix">
+        <div class="row">
+
+            <div class="span9">
+                <h3>{{ notification.notificationType }}</h3>
+                <p><u>{{ notification.dateAsString }}</u></p>
+                <div class="alert alert-info fat-text" style="font-size: 1.4em;">
+                    {{ notification.content|raw }}
+                </div>
+            </div>
+
+            <div class="span3">
+                {% embed 'template-parts/randomizer.html.twig' %} {% endembed %}
+                {% embed 'template-parts/best-sellers.html.twig' %} {% endembed %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends  'base.html.twig' %}
+
+{% block title %} Известия {% endblock %}
+
+{% block  body %}
+
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':"Известия"} %}
+
+    <div class="main-content clearfix">
+
+        <div class="notifications-section">
+            {% if notis %}
+                <!-- notifications  -->
+                {% for noti in notis %}
+                    {% embed 'user-related/templates/single-notification.html.twig' %} {% endembed %}
+                {% endfor %}
+                <!-- end notifications -->
+                <hr class="noti-separator">
+                <small class="small-clean-text removeAllNotificationsBtn" id="removeAllNotisMobileBtn" >
+                    Изчистване на всички
+                </small>
+
+            {% else %}
+                <span class="alert alert-success fat-text"> Нямате известия!</span>
+                <style>
+                    #hidden-noti-bar {
+                        overflow: hidden;
+                    }
+                </style>
+            {% endif %}
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -101,11 +101,11 @@ class UserController extends Controller
         $address->setUserId($user->getId());
 
         $redirection = $request->get('redirect');
-        if($redirection == null)
+        if ($redirection == null)
             $redirection = "profile";
         $redirections = [
-            'checkout'=>'shopping_cart_checkout',
-            'profile'=>'profile_page'
+            'checkout' => 'shopping_cart_checkout',
+            'profile' => 'profile_page'
         ];
 
         $form = $this->createForm(UserAddressType::class, $address);
@@ -186,11 +186,11 @@ class UserController extends Controller
         $user = $this->getUser();
         $addressToEdit = $this->getDoctrine()->getRepository(UserAddress::class)->findOneBy(array('id' => $addressId));
         $redirection = $request->get('redirect');
-        if($redirection == null)
+        if ($redirection == null)
             $redirection = "profile";
         $redirections = [
-            'checkout'=>'shopping_cart_checkout',
-            'profile'=>'profile_page'
+            'checkout' => 'shopping_cart_checkout',
+            'profile' => 'profile_page'
         ];
 
 
@@ -333,13 +333,29 @@ class UserController extends Controller
      * @Route("/user/notifications/request", name="get_notifications")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
-    public function loadNotificationsAction(){
+    public function loadNotificationsAction()
+    {
         $user = $this->getUser();
-        $notifications = $this->getDoctrine()->getRepository(Notification::class)->findBy(array('targetId'=>$user->getId()));
+        $notifications = $this->getDoctrine()->getRepository(Notification::class)->findBy(array('targetId' => $user->getId()));
 
         return $this->render('user-related/templates/notification-update-result.html.twig',
             [
-               'notis'=>$notifications,
+                'notis' => $notifications,
+            ]);
+    }
+
+    /**
+     * @Route("/user/notifications/mobile", name="get_mobile_notifications")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     */
+    public function mobileNotificationsAction()
+    {
+        $user = $this->getUser();
+        $notifications = $this->getDoctrine()->getRepository(Notification::class)->findBy(array('targetId' => $user->getId()));
+
+        return $this->render('user-related/notifications-mobile.html.twig',
+            [
+                'notis' => $notifications,
             ]);
     }
 
@@ -347,10 +363,11 @@ class UserController extends Controller
      * @Route("/user/notifications/remove-all", name="remove_notifications")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
-    public function removeAllNotisAction(){
-        $notifications = $this->getDoctrine()->getRepository(Notification::class)->findBy(array('targetId'=>$this->getUser()->getId()));
-        if($notifications != null){
-            $entityManager  = $this->getDoctrine()->getManager();
+    public function removeAllNotisAction()
+    {
+        $notifications = $this->getDoctrine()->getRepository(Notification::class)->findBy(array('targetId' => $this->getUser()->getId()));
+        if ($notifications != null) {
+            $entityManager = $this->getDoctrine()->getManager();
             foreach ($notifications as $notification)
                 $entityManager->remove($notification);
             $entityManager->flush();
@@ -358,7 +375,7 @@ class UserController extends Controller
 
         return $this->render('user-related/templates/notification-update-result.html.twig',
             [
-                'notis'=>null,
+                'notis' => null,
             ]);
     }
 
@@ -368,10 +385,11 @@ class UserController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function removeSingleNotificationAction(Request $request){
+    public function removeSingleNotificationAction(Request $request)
+    {
         $id = $request->get('notificationId');
-        $notification = $this->getDoctrine()->getRepository(Notification::class)->findOneBy(array('id'=>$id));
-        if($notification != null && $notification->getTargetId() == $this->getUser()->getid()){
+        $notification = $this->getDoctrine()->getRepository(Notification::class)->findOneBy(array('id' => $id));
+        if ($notification != null && $notification->getTargetId() == $this->getUser()->getid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($notification);
             $entityManager->flush();
@@ -380,6 +398,26 @@ class UserController extends Controller
         return $this->redirectToRoute('get_notifications');
     }
 
+    /**
+     * @Route("/user/notifications/view/{notificationId}", name="view_single_notification", defaults={"notificationId"=null})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @param $notificationId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function viewSingleNotification(Request $request, $notificationId)
+    {
+        $user = $this->getUser();
+        $notification = $this->getDoctrine()->getRepository(Notification::class)->findOneBy(array('id'=>$notificationId));
+        if($notification == null || $user->getId() != $notification->getTargetId())
+            return $this->redirectToRoute('homepage');
+
+
+        return $this->render('user-related/single-notification-view.html.twig',
+            [
+               'notification'=>$notification,
+            ]);
+    }
 
     /**
      * @param UserAddress $address

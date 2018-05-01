@@ -175,5 +175,13 @@ class Notification
         $this->notificationType = $notification->getNotificationType();
         $this->content = $notification->getContent();
     }
+
+    /**
+     * @return string
+     */
+    public  function getDateAsString() : string{
+        return $this->date->format("d.m,Y (h:i:s)");
+    }
+
 }
 
