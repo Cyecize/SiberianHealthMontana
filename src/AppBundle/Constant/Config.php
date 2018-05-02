@@ -21,4 +21,8 @@ class Config
 
     public static $MAILER_EMAIL_ADDRESS = "ceci_nfs9@abv.bg";
 
+    public static $MAILER_DISPLAY_NAME = "Сибирско Здраве - Монтана";
+
+    public static  $PASSWORD_RECOVERY_LEASE_TIME = 86400;
+
 }

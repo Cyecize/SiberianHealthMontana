@@ -249,7 +249,7 @@ class OrdersController extends Controller
         //send mail
         $forgedProds = $cartManager->forgeProductsFromCookie(json_decode($order->getShoppingCart()), $entityManager);
         $message = (new \Swift_Message("Поръчка в Сибирско Здраве - Монтана"))
-            ->setFrom([Config::$MAILER_EMAIL_ADDRESS => Config::$MAILER_EMAIL_ADDRESS])
+            ->setFrom([Config::$MAILER_EMAIL_ADDRESS => Config::$MAILER_DISPLAY_NAME])
             ->setTo($order->getEmail())
             ->setBody($this->renderView(
                 'mailing/order-accepted-message.html.twig',
