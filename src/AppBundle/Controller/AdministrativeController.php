@@ -355,6 +355,50 @@ class AdministrativeController extends Controller
             $entityManager->merge($productToEdit);
             $entityManager->flush();
 
+
+            //TODO edit image
+            //star image processing
+
+            $imageName = $_FILES['image']['name']['img_file'];
+            $tmpImgName = $_FILES['image']['tmp_name']['img_file'];
+            if($imageName != null) /* image is posted */ {
+                if(!ImageCompressorManager::isValidImage('img_file')){
+                    $error = "Имаше проблем с качването на снимката";
+                    goto  escape;
+                }
+
+                $imageSize = $_FILES['image']['size']['img_file'];
+                if ($imageSize > ConstantValues::$MAX_UPLOAD_FILESIZE) {
+                    $error = "Файлът не трябва да надвишава 6MB., тoзи е " . round($imageSize / 1024 / 1024, 2);
+                    goto escape;
+                }
+
+                $tempDestination = PathConstants::$TEMPORARY_UPLOAD_DIRECTORY . $imageName;
+                move_uploaded_file($tmpImgName, $tempDestination);
+
+                //compressing
+                $setting = ImageCompressorManager::createSettingsForImage(PathConstants::$TEMPORARY_OUTPUT_DIRECTORY);
+                $compressor = new ImgCompressor($setting);
+                $compressedImgName = ImageCompressorManager::compress($compressor, $tempDestination);
+                //end compressing
+
+                copy(PathConstants::$TEMPORARY_OUTPUT_DIRECTORY . $compressedImgName, PathConstants::$CATEGORIES_PATH . $productToEdit->getFatherCategory()->getLatinName() . DIRECTORY_SEPARATOR . $productToEdit->getId() . DIRECTORY_SEPARATOR . md5($compressedImgName) . '.jpg');
+                unlink($tempDestination);
+                unlink(PathConstants::$TEMPORARY_OUTPUT_DIRECTORY . $compressedImgName); //erase temp output file
+
+                $oldImageName = $productToEdit->getImgPath();
+                $productToEdit->setImgPath(md5($compressedImgName) . ".jpg");
+
+                $entityManager->merge($productToEdit);
+                $entityManager->flush();
+
+                try {
+                    unlink(PathConstants::$CATEGORIES_PATH . $productToEdit->getFatherCategory()->getLatinName() . DIRECTORY_SEPARATOR . $productToEdit->getId() . DIRECTORY_SEPARATOR . $oldImageName);
+                }
+                catch (\Exception $e){
+                }
+            }
+
             return $this->redirectToRoute('admin_panel');
         }
 
