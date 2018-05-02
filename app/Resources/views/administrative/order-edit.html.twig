@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Обработка на поръчки {% endblock %}
+
+{% block stylesheets %}
+    <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/css/form-main.css') }}">
+{% endblock %}
+
+
+{% block body %}
+    {% embed 'template-parts/error-success-pair.html.twig' %} {% endembed %}
+    {% include 'administrative/title-template-part.html.twig' with {'title':'Обработка на поръчка ' ~ order.id} %}
+
+    <div class="row clearfix">
+        <div class="span12">
+            {% embed 'template-parts/order-details.html.twig' %} {% endembed %}
+        </div>
+        <div class="span12">
+            <h3>Обработка:</h3>
+            <p>Настояща цена: {{ relevantPrice|format(2) }}</p>
+            <div class="hidden" id="orderIdHidden">{{ order.id }}</div>
+            <button id="removeBtn" class="btn btn-danger">Изтриване</button>
+            <button id="acceptBtn" class="btn btn-success">Приемане</button>
+            <a href="{{ path('admin_panel') }}">
+                <button class="btn btn-default">Обратно</button>
+            </a>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            var orderId = $('#orderIdHidden');
+
+            $('#removeBtn').on('click', function () {
+                if (confirm("Изтриване на поръчка " + orderId.text())){
+                    var url = "/admin/order/remove/" + orderId.text();
+                    performAjax(url);
+                }
+            });
+
+            $('#acceptBtn').on('click', function () {
+                if (confirm("Приемане на поръчка " + orderId.val() + "? Това ще изпрати известие на потребителя и ще редактира количеството на продуктите"))
+                    performAjax("{{ path('admin_accept_order', {'orderId':order.id}) }}");
+            });
+
+            function performAjax(url) {
+                $.ajax({
+                    type:"POST",
+                    url:url,
+                    data:{orderId:orderId.text()},
+                    success:function (data) {
+                        var res = JSON.parse(data);
+                        if(res['status'] == 200){
+                            document.location.href = "{{ path('admin_panel') }}";
+                            return;
+                        }
+                        var url = "/admin/order/{{ order.id }}"+ "?error=" + res['message'];
+                        document.location.href = url;
+                    },
+                    error:console.error
+                })
+            }
+        });
+    </script>
+{% endblock %}

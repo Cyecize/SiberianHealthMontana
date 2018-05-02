@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
+
 {% block title %} {{ informator.websiteName }}: {{ product.title }} {% endblock %}
 
 {% block body %}
@@ -23,7 +24,7 @@
 
                             <strong>Артикул &numero;: </strong> <span class="cookiefont">{{ product.id }}</span><br>
                             <strong>Наличност:</strong>
-                            {% if product.quantity == 0 %}
+                            {% if product.quantity <= 0 %}
                             <span class=" alert-danger">Изчерпан</span>
                         {% else %}
                             <span class=" alert-success">В наличност</span>
