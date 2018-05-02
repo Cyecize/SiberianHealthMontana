@@ -1,0 +1,37 @@
+{% extends  'base.html.twig' %}
+
+{% block title %} Моите поръчки {% endblock %}
+
+{% block  body %}
+
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':"Моите поръчки"} %}
+
+    <div class="main-content clearfix">
+        {% embed 'template-parts/error-success-pair.html.twig' %} {% endembed %}
+        <div class="main-content">
+            <div class="row">
+                <div class="span9">
+                    {% if orders|length > 0 %}
+                    {% embed 'template-parts/order-list-template.html.twig' with {'orderPath':"/user/order"} %} {% endembed %}
+                    <div class="pagination pagination-small pagination-centered">
+                        <ul>
+                            {% for i in 1..pages %}
+                                <li {% if i == currentPage %} class="active" {% endif %}>
+                                    <a href="{{ path('admin_orders', {'filter':ordersType}) }}?page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% else %}
+                        <h3 class="alert alert-info">Нямате поръчки</h3>
+                    {% endif %}
+                </div>
+                <div class="span3 col">
+                    {% embed 'template-parts/randomizer.html.twig' %} {% endembed %}
+                    {% embed 'template-parts/best-sellers.html.twig' %} {% endembed %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

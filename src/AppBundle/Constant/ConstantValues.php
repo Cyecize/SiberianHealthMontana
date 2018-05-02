@@ -52,6 +52,11 @@ class ConstantValues
     public static $MAX_SEARCH_RESULTS = 60;
 
     /**
+     * @var int
+     */
+    public static $MAX_ORDERS_PER_PAGE = 10;
+
+    /**
      * @var string
      * TODO function will replace the {{id}} with order ID
      */

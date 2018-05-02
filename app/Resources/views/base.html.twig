@@ -36,14 +36,22 @@
     <script src="{{ asset('styles/themes/js/jquery.scrolltotop.js') }}"></script>
     <script src="{{ asset('styles/themes/js/jquery.fancybox.js') }}"></script>
 
-    <script src="{{ asset('styles/themes/js/js/notification-modal-manager.js') }}"></script>
+    {% if app.user %}
+        <script src="{{ asset('styles/themes/js/js/notification-modal-manager.js') }}"></script>
+    {% endif %}
 
 
 </head>
-<!-- MUCH THANK YOU TO THE CREATORS OF THAT FREE TEMPLATE THAI I FOUND ON THE WEB
+<!--
+MUCH THANK YOU TO THE CREATORS OF THAT FREE TEMPLATE THAI I FOUND ON THE WEB
 BACKEND IS CREATED BY Z-Computers http://yekimov-tech.com:8090
 SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
 -->
+
+<!--
+ ALSO IF THIS SEEMS LIKE A COPY OF ANOTHER WEBSITE...  Yes, the content is...
+ I Just want to make it clear the the developer strongly disagrees with this but the client demands to have the same content/layout
+ -->
 <body>
 
 {% if informator.getError %}
@@ -69,6 +77,9 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
                                 <i class="material-icons custom-message-icon" id="notification-icon">sms<span
                                             class="tiny-badge"></span></i>
                                 <div id="hidden-noti-bar" class="notifications-section"></div>
+                            </li>
+                            <li>
+                                <a href="{{ path('user_orders') }}">Моите поръчки</a>
                             </li>
                         {% endif %}
                         <li>
@@ -129,10 +140,14 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
                         <h5>Меню: </h5>
                         <ul class="nav">
                             <li><a href="/">Начало</a></li>
+                            <li><a href="{{ path('about_us') }}">Относно "Сибирско Здраве"</a> </li>
                             <li><a href="{{ path('contacts') }}">Контакти</a></li>
                             <li><a href="{{ path('shopping_cart') }}">Количка</a></li>
 
                             {% if app.user %}
+                                <li>
+                                    <a href="{{ path('user_orders') }}">Моите поръчки</a>
+                                </li>
                                 <li><a href="{{ path('security_logout') }}">Изход</a></li>
                             {% else %}
                                 <li><a href="{{ path('security_login') }}">Вход</a></li>
@@ -163,7 +178,9 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
 
                                 Нашият основен приоритет е здравето на човека!
 
-                                Корпорация "Сибирско здраве" е основана през 1996 година в Новосибирск. През всичките тези години ние активно разработваме и пускаме на пазара широка линия патентовани хранителни добавки както и натурална козметика.</p>
+                                Корпорация "Сибирско здраве" е основана през 1996 година в Новосибирск. През всичките
+                                тези години ние активно разработваме и пускаме на пазара широка линия патентовани
+                                хранителни добавки както и натурална козметика.</p>
                             <br/>
 
                             <div class="footer-icons" id="cats">

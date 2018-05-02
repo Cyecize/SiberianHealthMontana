@@ -45,12 +45,3 @@
     color: #808080;
     text-decoration: none;
 }
-
-@media (max-width: 768px) {
-
-    .col-sm-2 {
-        width: auto;
-        min-width: 150px;
-        max-width: 200px;
-    }
-}

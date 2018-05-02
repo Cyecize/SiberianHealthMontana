@@ -178,7 +178,7 @@ class ProductController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
-    public function commitCheckoutAction(Request $request, CartManager $cartManager,DoctrineNotificationManager $notificationManager)
+    public function commitCheckoutAction(Request $request, CartManager $cartManager, DoctrineNotificationManager $notificationManager)
     {
 
         $address = new UserAddress();
@@ -236,7 +236,7 @@ class ProductController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
-    public function commitCheckoutLoggedAction(Request $request, CartManager $cartManager,DoctrineNotificationManager $notificationManager)
+    public function commitCheckoutLoggedAction(Request $request, CartManager $cartManager, DoctrineNotificationManager $notificationManager)
     {
         $state = array('status' => 0, 'message' => null, 'orderId' => null);
 
@@ -278,7 +278,11 @@ class ProductController extends Controller
         $notification->setNotificationType("Изпратена поръчка!");
         $orderId = $order->getId();
 
-        $notification->setContent("<b>Вашата поръчка беше доставена до нас!</b><p>Очаквайте обаждане за потвърждаване на поръчка номер:" .  $orderId ."</p>");
+        $notification->setContent(
+            "<b>Вашата поръчка беше регистрирана!</b><p>Очаквайте обаждане за потвърждаване на поръчка номер:"
+            . $orderId .
+            "</p><p>Можете да видите статуса на вашата поръчка <a href='/user/order/$orderId'>тук</a> </p>" .
+        "<p>Също можете да видите вашите продишни поръчки <a href='/user/orders/all'>тук</a> </p>");
         $notificationManager->sendToUser($this->getUser(), $notification);
 
         $cartManager->unsetDefaultCartCookie();
@@ -409,23 +413,23 @@ class ProductController extends Controller
     public function searchAction(Request $request, $text)
     {
         $currentPage = 1;
-        if($request->get('page') != null){
-            if(intval($request->get('page') > 0))
+        if ($request->get('page') != null) {
+            if (intval($request->get('page') > 0))
                 $currentPage = $request->get('page');
         }
         $searchParam = $request->get('searchText');
-        if($searchParam == null)
+        if ($searchParam == null)
             $searchParam = $text;
 
         $prodRepo = $this->getDoctrine()->getRepository(Product::class);
-        $products = $prodRepo->findBy(array('id'=>$searchParam));
-        if($products == null){
-            $products = $prodRepo->findBy(array('sibirCode'=>$searchParam));
+        $products = $prodRepo->findBy(array('id' => $searchParam));
+        if ($products == null) {
+            $products = $prodRepo->findBy(array('sibirCode' => $searchParam));
         }
 
-        if($searchParam == null)
+        if ($searchParam == null)
             $searchParam = "";
-        if($products == null){
+        if ($products == null) {
             $products = $prodRepo->findByNameRegx($searchParam);
         }
 
@@ -435,10 +439,10 @@ class ProductController extends Controller
         return $this->render('default/search-result.html.twig',
             [
                 'searchText' => $searchParam,
-                'products'=>$products,
-                'offset'=>$offset,
-                'currentPage'=>$currentPage,
-                'allPages'=>$allPages,
+                'products' => $products,
+                'offset' => $offset,
+                'currentPage' => $currentPage,
+                'allPages' => $allPages,
             ]);
     }
 
@@ -472,7 +476,8 @@ class ProductController extends Controller
         return $totalPrice;
     }
 
-    private function sendOrderNotificationToAdmins(DoctrineNotificationManager $notificationManager, int $orderId){
+    private function sendOrderNotificationToAdmins(DoctrineNotificationManager $notificationManager, int $orderId)
+    {
         $message = ConstantValues::$NEW_ORDER_MESSAGE;
         $message = preg_replace('/{{id}}/', $orderId, $message);
         $notification = new Notification();

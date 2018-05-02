@@ -17,6 +17,7 @@ use AppBundle\Entity\ProductCategory;
 use AppBundle\Entity\ProductCategoryForCreation;
 use AppBundle\Entity\SocialLink;
 use AppBundle\Entity\User;
+use AppBundle\Entity\UserAddress;
 use AppBundle\EventListener\LoginListener;
 use AppBundle\Form\ProductCategoryType;
 use AppBundle\Form\ProductType;
@@ -36,6 +37,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AdministrativeController extends Controller
 {
+    /**
+     * @param User $user
+     * @return bool
+     */
     private function isUserPrivileged(User $user)
     {
         if ($user->getAuthorityLevel() <= Config::$ADMIN_USER_LEVEL)
@@ -46,8 +51,10 @@ class AdministrativeController extends Controller
     /**
      * @Route("/admin", name="admin_panel")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function adminPanelAction()
+    public function adminPanelAction(Request $request)
     {
         if (!$this->isUserPrivileged($this->getUser()))
             return $this->redirectToRoute('homepage');
@@ -55,7 +62,8 @@ class AdministrativeController extends Controller
 
         return $this->render('administrative/admin-panel.html.twig',
             [
-
+                'error' => $request->get('error'),
+                'success' => $request->get('success'),
             ]);
     }
 
@@ -304,7 +312,7 @@ class AdministrativeController extends Controller
                 'error' => $error,
                 'categories' => $allCategories,
                 'form' => $form->createView(),
-                'product'=>$product
+                'product' => $product
             ]);
 
     }
@@ -315,20 +323,21 @@ class AdministrativeController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function editProductAction(Request $request){
-        if(!$this->isUserPrivileged($this->getUser()))
+    public function editProductAction(Request $request)
+    {
+        if (!$this->isUserPrivileged($this->getUser()))
             return $this->redirectToRoute('homepage');
         $allCategories = $this->getDoctrine()->getRepository(ProductCategory::class)->findAll();
-        $error  = null;
+        $error = null;
 
 
         $product = new Product();
         $productId = $request->get('productId');
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
-        if($form->isSubmitted()){
-            $productToEdit = $this->getDoctrine()->getRepository(Product::class)->findOneBy(array('id'=>$productId));
-            if($productToEdit == null){
+        if ($form->isSubmitted()) {
+            $productToEdit = $this->getDoctrine()->getRepository(Product::class)->findOneBy(array('id' => $productId));
+            if ($productToEdit == null) {
                 $error = "Несъществуващ продукт!";
                 goto escape;
             }
@@ -353,10 +362,10 @@ class AdministrativeController extends Controller
 
         return $this->render('administrative/edit-product.html.twig',
             [
-                'error'=>$error,
-                'categories'=>$allCategories,
-                'form'=>$form->createView(),
-                'product'=>$product,
+                'error' => $error,
+                'categories' => $allCategories,
+                'form' => $form->createView(),
+                'product' => $product,
             ]);
     }
 
@@ -366,24 +375,25 @@ class AdministrativeController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function removeRelationAction(Request $request){
-        if(!$this->isUserPrivileged($this->getUser()))
+    public function removeRelationAction(Request $request)
+    {
+        if (!$this->isUserPrivileged($this->getUser()))
             return $this->redirectToRoute('homepage');
 
         $catId = $request->get('catId');
         $prodId = $request->get('prodId');
 
-        $category = $this->getDoctrine()->getRepository(ProductCategory::class)->findOneBy(array('id'=>$catId));
-        $product = $this->getDoctrine()->getRepository(Product::class)->findOneBy(array('id'=>$prodId));
+        $category = $this->getDoctrine()->getRepository(ProductCategory::class)->findOneBy(array('id' => $catId));
+        $product = $this->getDoctrine()->getRepository(Product::class)->findOneBy(array('id' => $prodId));
 
-        if($category != null && $product != null){
+        if ($category != null && $product != null) {
             $em = $this->getDoctrine()->getManager(); // ...or getEntityManager() prior to Symfony 2.1
             $connection = $em->getConnection();
             $statement = $connection->prepare("DELETE FROM product_category_product WHERE product_category_id = $catId AND product_id = $prodId");
             $statement->execute();
         }
 
-        return $this->render('queries/generic-query-aftermath-message.twig',['error'=>""]);
+        return $this->render('queries/generic-query-aftermath-message.twig', ['error' => ""]);
     }
 
 
@@ -425,7 +435,8 @@ class AdministrativeController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function searchProdByIdAction(Request $request){
+    public function searchProdByIdAction(Request $request)
+    {
         if (!$this->isUserPrivileged($this->getUser()))
             return $this->redirectToRoute('homepage');
 
@@ -433,14 +444,14 @@ class AdministrativeController extends Controller
         $error = ['status' => 0,
             'productId' => null,
             'productName' => null,
-            'siberianCode'=>null,
-            'price'=>null,
-            'description'=>null,
-            'manufacturer'=>null,
-            'quantity'=>null,
-            'soldCount'=>null,
-            'hidden'=>null,
-            'categories'=>array(),
+            'siberianCode' => null,
+            'price' => null,
+            'description' => null,
+            'manufacturer' => null,
+            'quantity' => null,
+            'soldCount' => null,
+            'hidden' => null,
+            'categories' => array(),
         ];
         if ($prodId == null) {
             $error['status'] = 404;
@@ -452,7 +463,7 @@ class AdministrativeController extends Controller
             $error['status'] = 200;
             $error['productId'] = $prod->getId();
             $error['productName'] = $prod->getTitle();
-            $error['siberianCode'] =  $prod->getSibirCode();
+            $error['siberianCode'] = $prod->getSibirCode();
             $error['price'] = $prod->getPrice();
             $error['description'] = $prod->getDescription();
             $error['manufacturer'] = $prod->getManufacturer();
@@ -462,8 +473,8 @@ class AdministrativeController extends Controller
 
             $categories = $prod->getCategories();
             foreach ($categories as $category)
-                if($category->getId() != $prod->getCategoryId())
-                    $error['categories'][] = ['id'=>$category->getId(), 'name'=>$category->getCategoryName()];
+                if ($category->getId() != $prod->getCategoryId())
+                    $error['categories'][] = ['id' => $category->getId(), 'name' => $category->getCategoryName()];
         }
 
         $error = json_encode($error);
@@ -495,6 +506,148 @@ class AdministrativeController extends Controller
         $this->insertProductCategoryRelation($prodId, $catId);
 
         return $this->redirectToRoute('admin_panel');
+    }
+
+
+    /**
+     * @Route("/admin/users", name="manage_users")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function manageUsersAction(Request $request)
+    {
+        $error = $request->get('error');
+        $success = $request->get('success');
+        $user = $this->getUser();
+        if ($user->getAuthorityLevel() > Config::$ADMINISTRATOR_LEVEL)
+            return $this->redirectToRoute('admin_panel', ['error' => "Нямате права"]);
+
+
+        escape:
+
+        return $this->render('administrative/manage-users.html.twig', [
+            'error' => $error,
+            'success' => $success,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/users/findByParam", name="find_user_by_username_id_email")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function searchUserByNameOrId(Request $request)
+    {
+        $param = $request->get('searchParam');
+
+        $error = ['status' => 0, 'message' => null, 'userId' => null, 'username' => null];
+        if ($this->getUser()->getAuthorityLevel() > Config::$ADMINISTRATOR_LEVEL) {
+            $error['status'] = 401;
+            $error['message'] = "Unauthorized";
+            goto escape;
+        }
+
+        $repo = $this->getDoctrine()->getRepository(User::class);
+        $user = $repo->findOneBy(array('id' => $param));
+        if ($user == null)
+            $user = $repo->findOneBy(array('username' => $param));
+        if ($user == null)
+            $user = $repo->findOneBy(array('email' => $param));
+
+        if ($user == null) {
+            $error['status'] = 404;
+            $error['message'] = "Not Found";
+            goto escape;
+        }
+
+        $error['status'] = 200;
+        $error['message'] = "OK";
+        $error['username'] = $user->getUsername();
+        $error['userId'] = $user->getId();
+
+
+        escape:
+
+        return $this->render('queries/generic-query-aftermath-message.twig',
+            [
+                'error' => json_encode($error),
+            ]);
+    }
+
+    /**
+     * @Route("/admin/users/destroy", name="admin_destroy_user")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function destroyUserAction(Request $request){
+        $userId = $request->get('userId');
+
+        $error = ['status' => 0, 'message' => null];
+        if ($this->getUser()->getAuthorityLevel() > Config::$ADMINISTRATOR_LEVEL) {
+            $error['status'] = 401;
+            $error['message'] = "Unauthorized";
+            goto escape;
+        }
+
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(array('id'=>$userId));
+        if($user == null){
+            $error['status'] = 404;
+            $error['message'] = "Not found (user) with id $userId";
+            goto escape;
+        }
+
+        if($user->getAuthorityLevel() == Config::$ADMINISTRATOR_LEVEL){
+            $error['status'] = 401;
+            $error['message'] = "Cannot Remove Administrator";
+            goto escape;
+        }
+
+        $addresses = $this->getDoctrine()->getRepository(UserAddress::class)->findBy(array('userId' => $user->getId()));
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($user->getCart());
+        $entityManager->remove($user);
+        foreach ($addresses as $address)
+            $entityManager->remove($address);
+        $entityManager->flush();
+
+        $error['status'] = 200;
+        $error['message'] = "User with Id $userId has been removed";
+
+        escape:
+
+        return $this->render('queries/generic-query-aftermath-message.twig',
+            [
+               'error'=>json_encode($error),
+            ]);
+    }
+
+    /**
+     * @Route("/admin/users/all", name="admin_get_all_users")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getAllUsers(){
+        $res = [];
+
+        if($this->getUser()->getAuthorityLevel() > Config::$ADMINISTRATOR_LEVEL){
+            goto  escape;
+        }
+
+        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+        foreach ($users as $user)
+            $res[] = ['userId'=>$user->getId(), 'username'=>$user->getUsername(), 'level'=>$user->getAuthorityLevel()];
+
+        escape:
+
+        return $this->render('queries/generic-query-aftermath-message.twig',
+            [
+               'error'=>json_encode($res),
+            ]);
     }
 
 

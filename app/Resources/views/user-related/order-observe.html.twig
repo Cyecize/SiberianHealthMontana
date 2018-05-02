@@ -1,0 +1,21 @@
+{% extends  'base.html.twig' %}
+
+{% block title %} Профил {% endblock %}
+
+{% block  body %}
+
+    {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':"Поръчка " ~ order.id} %}
+
+    <div class="main-content clearfix">
+        <div class="row">
+            <div class="span9">
+                {% embed 'template-parts/order-details.html.twig' %} {% endembed %}
+            </div>
+            <div class="span3 col">
+                {% embed 'template-parts/randomizer.html.twig' %} {% endembed %}
+                {% embed 'template-parts/best-sellers.html.twig' %} {% endembed %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

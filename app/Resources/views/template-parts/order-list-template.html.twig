@@ -1,0 +1,23 @@
+<div class="control-group clearfix no-wrap space-between">
+    <div class="span1">ID</div>
+    <div class="span2">Град</div>
+    <div class="span1">Цена</div>
+    <div class="span2">Статус</div>
+</div>
+{% for order in orders %}
+<hr>
+<div class="control-group clearfix no-wrap space-between order-holder">
+    <div class="span1">
+        <a href="{{ orderPath }}/{{ order.id }}">{{ order.id }}</a>
+    </div>
+    <div class="span2">
+        {{ order.residential }}
+    </div>
+    <div class="span1">
+        {{ order.totalPrice }}
+    </div>
+    <div class="span2">
+        <p class="alert alert-{% if order.accepted %}success{% else %}danger{% endif %}">{% if order.accepted %}Приета{% else %}В процес{% endif %}</p>
+    </div>
+</div>
+{% endfor %}

@@ -9,16 +9,15 @@
 
     {% include 'template-parts/banner-generic.html.twig' with {'pageTitle':'Контролен Панел'} %}
 
-    <style>
-
-
-    </style>
+    <div>
+        {% embed 'template-parts/error-success-pair.html.twig' %} {% endembed %}
+    </div>
 
     <div class="control-container">
         <div class=" col-sm-2">
             <a href="{{ path('edit_social_links') }}">
                 <div class="div-square">
-                    <i class="fa fa-users fa-5x"></i>
+                    <i class="fa fa-share-square fa-5x"></i>
                     <h5>Промяна на социални линкове</h5>
                 </div>
             </a>
@@ -27,7 +26,7 @@
         <div class="col-sm-2">
             <a href="{{ path('create_new_category') }}">
                 <div class="div-square">
-                    <i class="fa fa-tags fa-5x"></i>
+                    <i class="fa fa-address-card fa-5x"></i>
                     <h5>Добавяне на нова категория</h5>
                 </div>
             </a>
@@ -36,7 +35,7 @@
         <div class="col-sm-2">
             <a href="{{ path('rename_category') }}">
                 <div class="div-square">
-                    <i class="fa fa-tags fa-5x"></i>
+                    <i class="fa fa-address-card fa-5x"></i>
                     <h5>Преименуване на категория</h5>
                 </div>
             </a>
@@ -45,7 +44,7 @@
         <div class="col-sm-2">
             <a href="{{ path('add_new_product') }}">
                 <div class="div-square">
-                    <i class="fa fa-envelope-o fa-5x"></i>
+                    <i class="fa fa-dropbox fa-5x"></i>
                     <h5>Нов продукт</h5>
                 </div>
             </a>
@@ -54,17 +53,26 @@
         <div class="col-sm-2">
             <a href="{{ path('edit_product') }}">
                 <div class="div-square">
-                    <i class="fa fa-envelope-o fa-5x"></i>
+                    <i class="fa fa-dropbox fa-5x"></i>
                     <h5>Редакция на продукт</h5>
                 </div>
             </a>
         </div>
 
         <div class="col-sm-2">
-            <a href="{{ path('edit_product') }}">
+            <a href="{{ path('manage_users') }}">
                 <div class="div-square">
                     <i class="fa fa-users fa-5x"></i>
                     <h5>User management</h5>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-2">
+            <a href="{{ path('admin_orders', {'filter':"all"}) }}">
+                <div class="div-square">
+                    <i class="fa fa-shopping-cart fa-5x"></i>
+                    <h5>Поръчки</h5>
                 </div>
             </a>
         </div>

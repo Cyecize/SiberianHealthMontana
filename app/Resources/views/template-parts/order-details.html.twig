@@ -1,0 +1,51 @@
+<div class="span4">
+    <h4>Информация</h4>
+    <div>
+        <h5>Адрес:</h5>
+        <p>Район: {{ order.township }}</p>
+        <p>Град/село {{ order.residential }}</p>
+        <p>Пощеснски код: {{ order.postCode }}</p>
+    </div>
+    <div>
+        <h5>Информация за купувач:</h5>
+        <p>Име: {{ order.fullName }}</p>
+        <p>Тел. номер: {{ order.phoneNumber }}</p>
+        <p>Email адрес: {{ order.email }}</p>
+        {% if order.userId %}
+            <p>UserId: <a href="{{ path('show_user_info', {'userId':order.userId}) }}"> {{ order.userId }}</a></p>
+        {% endif %}
+    </div>
+    <div>
+        <h5>Количка:</h5>
+        {% for forgedProd in forgedProducts %}
+            <p>Продукт({{ forgedProd.product.id }}), сиб.код({{ forgedProd.product.sibirCode }}), име: {{ forgedProd.product.price }} и количество: {{ forgedProd.quantity }}</p>
+        {% endfor %}
+    </div>
+    <div>
+        <h5>Обща сума:</h5>
+        <p>{{ order.totalPrice }}</p>
+    </div>
+    <div>
+        <h5>Статус:</h5>
+        {% if order.accepted %}
+            <p class="alert alert-success">Приета</p>
+        {% else %}
+            <p class="alert alert-danger">В Процес</p>
+        {% endif %}
+
+    </div>
+</div>
+<div class="span3">
+    <h4>Продукти: </h4>
+    <ul class="small-product">
+        {% for prod in products %}
+            <li>
+                <a href="{{ path('product_details', {'id':prod.id, 'catPath': prod.fatherCategory.categoryNameForUrls(informator.getCharacterTranslator)}) }}"
+                   title="{{ prod.title }}">
+                    <img src="{{ asset(prod.imgPathForDisplay) }}" alt="{{ prod.description }}">
+                </a>
+                <a href="{{ path('product_details', {'id':prod.id, 'catPath': prod.fatherCategory.categoryNameForUrls(informator.getCharacterTranslator)}) }}">{{ prod.title }}, <strong>{{ prod.id }}</strong></a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

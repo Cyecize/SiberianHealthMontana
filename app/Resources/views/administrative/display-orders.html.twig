@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Админ -> Поръчки {% endblock %}
+
+{% block body %}
+    {% include 'administrative/title-template-part.html.twig' with {'title':'Поръчки ' ~ ordersType} %}
+    {% embed 'template-parts/error-success-pair.html.twig' %} {% endembed %}
+    <div class="main-content">
+        <div class="row clearfix">
+            <div class="span12">
+                <div class="alert alert-info">
+                    <a href="{{ path('admin_orders', {'filter':"all"}) }}">Всички</a>&nbsp;&nbsp;&nbsp;
+                    <a href="{{ path('admin_orders', {'filter':"finished"}) }}">Приети</a>&nbsp;&nbsp;&nbsp;
+                    <a href="{{ path('admin_orders', {'filter':"inProgress"}) }}">Нови</a>
+                </div>
+                <div class="span12">
+                    <h5>Поръчки:</h5>
+                    {% embed 'template-parts/order-list-template.html.twig' with {'orderPath':"/admin/order"} %} {% endembed %}
+                    <div class="pagination pagination-small pagination-centered">
+                        <ul>
+                        {% for i in 1..pages %}
+                            <li  {% if i == currentPage %} class="active" {% endif %}>
+                                <a href="{{ path('admin_orders', {'filter':ordersType}) }}?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

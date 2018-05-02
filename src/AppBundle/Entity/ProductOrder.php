@@ -388,5 +388,6 @@ class ProductOrder
         $this->residential = $address->getResidential();
         $this->address = $address->getAddress();
     }
+
 }
 

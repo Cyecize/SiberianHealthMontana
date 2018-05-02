@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Управление на потребители {% endblock %}
+
+{% block stylesheets %}
+    <link type="text/css" rel="stylesheet" href="{{ asset('styles/themes/css/form-main.css') }}">
+{% endblock %}
+
+
+{% block body %}
+    {% embed 'template-parts/error-success-pair.html.twig' %} {% endembed %}
+    {% include 'administrative/title-template-part.html.twig' with {'title':'User management'} %}
+
+    <div class="row clearfix">
+        <div class="span4">
+            <h4>User removal</h4>
+            <div class="control-holder">
+                <input type="text" class="user-id-field">
+                <button class="btn btn-default searchBtn">Search</button>
+                <div class="result-box">
+
+                </div>
+                <div class="succes-action" style="display: none;">
+                    <div class="username"></div>
+                    <div class="userId"></div>
+                    <button class="btn btn-default" id="removeBtn">Remove</button>
+                </div>
+            </div>
+        </div>
+        <div class="span4">
+            <h4>User upgrade</h4>
+            <div class="control-holder">
+                <input type="text" class="user-id-field">
+                <button class="btn btn-default searchBtn">Search</button>
+                <div class="result-box">
+
+                </div>
+                <div class="succes-action" style="display: none;">
+                    <div class="username"></div>
+                    <div class="userId"></div>
+                    <button class="btn btn-default" id="upgradeBtn">Upgrade</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="span4">
+            <h4>View all users</h4>
+            <button class="btn btn-default" id="showAllUsers">Show All Users</button>
+            <div class="result-box"></div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            $('.searchBtn').on('click', function () {
+                var instance = $(this);
+                var searchParam = instance.parent().find('.user-id-field:first').val();
+                var resBox = instance.parent().find('.result-box');
+                var actionBox = instance.parent().find('.succes-action');
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path('find_user_by_username_id_email') }}",
+                    data: {"searchParam": searchParam},
+                    success: function (data) {
+                        var res = JSON.parse(data);
+                        if (res['status'] != 200) {
+                            actionBox.hide();
+                            resBox.show(100);
+                            resBox.text(res['message']);
+                            return;
+                        }
+                        resBox.hide(100);
+                        actionBox.show();
+                        actionBox.find('.username').text(res['username']);
+                        actionBox.find('.userId').text(res['userId']);
+                    },
+                    error: console.error
+                })
+            });
+            $('#removeBtn').on('click',function () {
+               var parent = $(this).parent();
+               var id = parent.find('.userId:first').text();
+
+               $.ajax({
+                   type:"POST",
+                   url:"{{ path('admin_destroy_user') }}",
+                   data:{userId:id},
+                   success:function (data) {
+                       var response = JSON.parse(data);
+                       if(response['status'] != 200){
+                           document.location.href = "/admin/users?error="+response['message'];
+                           return;
+                       }
+                       document.location.href = "/admin/users?success="+response['message'];
+                   },
+                   error:console.error
+               })
+            });
+
+            $('#upgradeBtn').on('click',function () {
+                var parent = $(this).parent();
+                var id = parent.find('.userId:first').text();
+                console.log(id);
+            });
+
+            $('#showAllUsers').on('click',function () {
+                var parent = $(this).parent();
+                var resBox = parent.find('.result-box');
+
+                $.ajax({
+                    url:"{{ path('admin_get_all_users') }}",
+                    success:function (data) {
+                        var res = JSON.parse(data);
+                        resBox.html('');
+                        for (var usr of res) {
+                            resBox.append($(`<p>${usr['username']}, ${usr['userId']}, auth:${usr['level']}<p>`));
+                        }
+                    },
+                    error:console.error
+                })
+            });
+        });
+
+    </script>
+{% endblock %}

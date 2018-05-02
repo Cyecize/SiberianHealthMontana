@@ -96,5 +96,13 @@ class DefaultController extends Controller
             ]);
     }
 
+    /**
+     * @Route("/about-us", name="about_us")
+     */
+    public function aboutUsPage(){
+
+        return $this->render('default/about-us.html.twig');
+    }
+
 
 }
