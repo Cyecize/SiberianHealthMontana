@@ -60,8 +60,12 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: '%mailer_transport%'
-    host: '%mailer_host%'
+    transport: "%mailer_transport%"
+    encryption: ssl
+    auth_mode: login
+    host: "%mailer_host%"
+    port: "%mailer_port%"
     username: '%mailer_user%'
     password: '%mailer_password%'
+    timeout: 10
     spool: { type: memory }

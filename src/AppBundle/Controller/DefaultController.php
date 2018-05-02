@@ -6,9 +6,11 @@ use AppBundle\Constant\ConstantValues;
 use AppBundle\Entity\HomeFlexBanner;
 use AppBundle\Entity\Notification;
 use AppBundle\Entity\ProductCategory;
+use AppBundle\Entity\ProductOrder;
 use AppBundle\Entity\SocialLink;
 use AppBundle\Form\ProductCategoryType;
 use AppBundle\Repository\SocialLinkRepository;
+use AppBundle\Service\CartManager;
 use AppBundle\Service\DoctrineNotificationManager;
 use AppBundle\Service\TwigInformer;
 use AppBundle\Service\ProductManager;
@@ -104,5 +106,18 @@ class DefaultController extends Controller
         return $this->render('default/about-us.html.twig');
     }
 
+    /**
+     *  Route("/order-email", name="about_email")
+     */
+   /* public function mailAction(CartManager $cartManager){
+        $order = $this->getDoctrine()->getRepository(ProductOrder::class)->findOneBy(array());
+        $forgetProds = $cartManager->forgeProductsFromCookie(json_decode($order->getShoppingCart()), $this->getDoctrine()->getManager());
+        return $this->render('mailing/order-accepted-message.html.twig',
+            [
+                'order'=>$order,
+                'forgedProducts'=>$forgetProds,
+            ]);
+    }
+*/
 
 }

@@ -19,6 +19,7 @@ use AppBundle\Service\CartManager;
 use AppBundle\Service\DoctrineNotificationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Swift_TransportException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -137,6 +138,7 @@ class OrdersController extends Controller
 
     /**
      * @Route("/admin/order/remove/{orderId}", name="admin_remove_order", defaults={"orderId"=null}, methods={"POST"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param Request $request
      * @param $orderId
      * @return \Symfony\Component\HttpFoundation\Response
@@ -183,13 +185,16 @@ class OrdersController extends Controller
     }
 
     /**
-     * @Route("/admin/order/accept/{orderId}", name="admin_accept_order", defaults={"orderId"=null}, methods={"POST"})
+     * @Route("/admin/order/accept/{orderId}", name="admin_accept_order", defaults={"orderId"=null})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param Request $request
      * @param $orderId
      * @param DoctrineNotificationManager $notificationManager
+     * @param \Swift_Mailer $mailer
+     * @param CartManager $cartManager
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function acceptOrderAction(Request $request, $orderId, DoctrineNotificationManager $notificationManager)
+    public function acceptOrderAction(Request $request, $orderId, DoctrineNotificationManager $notificationManager, \Swift_Mailer $mailer, CartManager $cartManager)
     {
 
         $state = ['status' => 0, 'message' => null];
@@ -238,10 +243,26 @@ class OrdersController extends Controller
                 $notificationManager->sendToUser($targetUser, $notification);
         }
 
-        //TODO send email to user
-
         $state['status'] = 200;
         $state['message'] = "OK";
+
+        //send mail
+        $forgedProds = $cartManager->forgeProductsFromCookie(json_decode($order->getShoppingCart()), $entityManager);
+        $message = (new \Swift_Message("Поръчка в Сибирско Здраве - Монтана"))
+            ->setFrom([Config::$MAILER_EMAIL_ADDRESS => Config::$MAILER_EMAIL_ADDRESS])
+            ->setTo($order->getEmail())
+            ->setBody($this->renderView(
+                'mailing/order-accepted-message.html.twig',
+                array('order'=>$order, 'forgedProducts'=>$forgedProds)
+            ),
+                'text/html');
+
+        try {
+            $mailer->send($message);
+        } catch (Swift_TransportException $e){
+
+        }
+        //end sendEmail
 
         escape:
 

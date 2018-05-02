@@ -67,4 +67,5 @@ class ConstantValues
      * TODO replace email and question upon sending notification
      */
     public static $NEW_CONTACT_US_MESSAGE = 'Ново запитване! <br> Email: {{email}}, <br> Име: {{name}} <br> Въпрос: <br><p>{{question}}</p>';
+
 }

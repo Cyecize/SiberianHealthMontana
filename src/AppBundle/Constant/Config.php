@@ -19,4 +19,6 @@ class Config
 
     public static $PASSWORD_MIN_LEN = 6;
 
+    public static $MAILER_EMAIL_ADDRESS = "ceci_nfs9@abv.bg";
+
 }
