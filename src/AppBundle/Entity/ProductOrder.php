@@ -98,9 +98,18 @@ class ProductOrder
      */
     private $township;
 
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime")
+     */
+    private $date;
+
     public function __construct()
     {
         $this->accepted = false;
+        $this->date =  new \DateTime('now', new \DateTimeZone('Europe/Sofia'));
     }
 
     /**
@@ -377,6 +386,24 @@ class ProductOrder
         return $this->township;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getDate(): \DateTime
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param \DateTime $date
+     */
+    public function setDate(\DateTime $date): void
+    {
+        $this->date = $date;
+    }
+
+
+
     /*
      *@param UserAddress $address
      */
@@ -387,6 +414,13 @@ class ProductOrder
         $this->postCode = $address->getPostCode();
         $this->residential = $address->getResidential();
         $this->address = $address->getAddress();
+    }
+
+    /**
+     * @return string
+     */
+    public  function getDateAsString() : string{
+        return $this->date->format("d.m,Y (h:i:s)");
     }
 
 }

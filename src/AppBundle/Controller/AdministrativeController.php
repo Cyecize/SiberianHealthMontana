@@ -356,9 +356,7 @@ class AdministrativeController extends Controller
             $entityManager->flush();
 
 
-            //TODO edit image
-            //star image processing
-
+            //start image processing
             $imageName = $_FILES['image']['name']['img_file'];
             $tmpImgName = $_FILES['image']['tmp_name']['img_file'];
             if($imageName != null) /* image is posted */ {
