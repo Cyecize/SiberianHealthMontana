@@ -154,7 +154,7 @@ class DefaultController extends Controller
                 'error' => $error,
                 'success' => $success,
                 'hiddenMail' => $hiddenMail,
-                'searchParam'=>$userSearchParam
+                'searchParam' => $userSearchParam
             ]);
     }
 
@@ -164,9 +164,10 @@ class DefaultController extends Controller
      * @param \Swift_Mailer $mailer
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function sendCodeToUserAction($userId,\Swift_Mailer $mailer){
-        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(array('id'=>$userId));
-        if($user == null)
+    public function sendCodeToUserAction($userId, \Swift_Mailer $mailer)
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(array('id' => $userId));
+        if ($user == null)
             return $this->redirectToRoute('homepage');
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -182,18 +183,22 @@ class DefaultController extends Controller
             ->setTo($user->getEmail())
             ->setBody($this->renderView(
                 'mailing/forgotten-password.html.twig',
-                array('user'=>$user, 'recoveryCode'=>$passwordRecovery->getCode())
+                array('user' => $user, 'recoveryCode' => $passwordRecovery->getCode())
             ),
                 'text/html');
 
         try {
             $mailer->send($message);
-        } catch (Swift_TransportException $e){
+            $spool = $mailer->getTransport()->getSpool();
+            $transport = $this->get('swiftmailer.transport.real');
 
+            $spool->flushQueue($transport);
+        } catch (Swift_TransportException $e) {
+            return $this->redirectToRoute('recovery_retrieve_code', ['error' => "Имаше проблем с изпращането на адреса, моля свържете се с нас!"]);
         }
         //end send mail
 
-        return $this->redirectToRoute('recovery_retrieve_code', ['success'=>"Кодът за връщане на акаунта ви беше изпратен. Проверете в пощата."]);
+        return $this->redirectToRoute('recovery_retrieve_code', ['success' => "Кодът за връщане на акаунта ви беше изпратен. Проверете в пощата."]);
 
     }
 
@@ -202,22 +207,23 @@ class DefaultController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function retrieveCodeAction(Request $request){
+    public function retrieveCodeAction(Request $request)
+    {
         $code = $request->get('code');
         $username = $request->get('username');
         $isCodeValid = false;
         $error = $request->get('error');
         $success = $request->get('success');
 
-        if($code != null){
-            $passwordRecovery = $this->getDoctrine()->getRepository(PasswordRecovery::class)->findOneBy(array('code'=>$code));
-            if($passwordRecovery == null || time() - $passwordRecovery->getTime() > Config::$PASSWORD_RECOVERY_LEASE_TIME || $passwordRecovery->getIsUsed()){
+        if ($code != null) {
+            $passwordRecovery = $this->getDoctrine()->getRepository(PasswordRecovery::class)->findOneBy(array('code' => $code));
+            if ($passwordRecovery == null || time() - $passwordRecovery->getTime() > Config::$PASSWORD_RECOVERY_LEASE_TIME || $passwordRecovery->getIsUsed()) {
                 $error = "Невалиден или вече употребяван код";
                 goto  escape;
             }
 
-            $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(array('id'=>$passwordRecovery->getUserId()));
-            if($user == null || $username != $user->getUsername()){
+            $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(array('id' => $passwordRecovery->getUserId()));
+            if ($user == null || $username != $user->getUsername()) {
                 $error = "Невалидно потребилтеско име!";
                 goto escape;
             }
@@ -231,10 +237,10 @@ class DefaultController extends Controller
 
         return $this->render('user-related/retreive-code-change-password.html.twig',
             [
-                'code'=>$code,
-                'error'=>$error,
-                'success'=>$success,
-                'isCodeValid'=>$isCodeValid,
+                'code' => $code,
+                'error' => $error,
+                'success' => $success,
+                'isCodeValid' => $isCodeValid,
             ]);
     }
 
@@ -245,29 +251,30 @@ class DefaultController extends Controller
      * @param UserPasswordEncoderInterface $encoder
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function commitRecoverPassword(Request $request, $code, UserPasswordEncoderInterface $encoder){
-        $passwordRecovery = $this->getDoctrine()->getRepository(PasswordRecovery::class)->findOneBy(array('code'=>$code));
-        if($passwordRecovery == null || time() - $passwordRecovery->getTime() > Config::$PASSWORD_RECOVERY_LEASE_TIME || $passwordRecovery->getIsUsed()){
+    public function commitRecoverPassword(Request $request, $code, UserPasswordEncoderInterface $encoder)
+    {
+        $passwordRecovery = $this->getDoctrine()->getRepository(PasswordRecovery::class)->findOneBy(array('code' => $code));
+        if ($passwordRecovery == null || time() - $passwordRecovery->getTime() > Config::$PASSWORD_RECOVERY_LEASE_TIME || $passwordRecovery->getIsUsed()) {
             $error = "Невалиден или вече употребяван код";
-            return $this->redirectToRoute('recovery_retrieve_code', ['error'=>$error]);
+            return $this->redirectToRoute('recovery_retrieve_code', ['error' => $error]);
         }
 
-        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(array('id'=>$passwordRecovery->getUserId()));
-        if($user == null){
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(array('id' => $passwordRecovery->getUserId()));
+        if ($user == null) {
             $error = "Потребителя не съществува";
-            return $this->redirectToRoute('recovery_retrieve_code', ['error'=>$error]);
+            return $this->redirectToRoute('recovery_retrieve_code', ['error' => $error]);
         }
 
         $password = $request->get('new-password');
         $passwordConf = $request->get('conf-password');
-        if($password == null || strlen($password) < 6){
+        if ($password == null || strlen($password) < 6) {
             $error = "Паролата трябва да е поне 6 знака";
-            return $this->redirectToRoute('recovery_retrieve_code', ['error'=>$error, 'code'=>$code, 'username'=>$user->getUsername()]);
+            return $this->redirectToRoute('recovery_retrieve_code', ['error' => $error, 'code' => $code, 'username' => $user->getUsername()]);
         }
 
-        if($password != $passwordConf){
+        if ($password != $passwordConf) {
             $error = "Паролите не съвпадат";
-            return $this->redirectToRoute('recovery_retrieve_code', ['error'=>$error, 'code'=>$code, 'username'=>$user->getUsername()]);
+            return $this->redirectToRoute('recovery_retrieve_code', ['error' => $error, 'code' => $code, 'username' => $user->getUsername()]);
         }
 
 
@@ -278,7 +285,7 @@ class DefaultController extends Controller
         $entityManager->merge($user);
         $entityManager->flush();
 
-        $recoveries = $this->getDoctrine()->getRepository(PasswordRecovery::class)->findBy(array('userId'=>$user->getId()));
+        $recoveries = $this->getDoctrine()->getRepository(PasswordRecovery::class)->findBy(array('userId' => $user->getId()));
         foreach ($recoveries as $recovery)
             $entityManager->remove($recovery);
         $entityManager->flush();
