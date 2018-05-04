@@ -199,6 +199,12 @@ iframe {
     font-size: 15px;
 }
 
+
+.youtube-responsive{
+    width:100%;
+    max-width: 600px;
+}
+
 /*
 	cart notifications
 
