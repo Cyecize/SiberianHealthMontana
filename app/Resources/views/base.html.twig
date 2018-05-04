@@ -101,6 +101,12 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
                                 </div>
                             </a></li>
                         <li><a href="{{ path('shopping_cart_checkout') }}">Закупуване</a></li>
+                        <li>
+                            <a href="{{ path('others_catalog') }}">Каталог</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('others_video') }}">Видео</a>
+                        </li>
                         {% if app.user %}
                             <li><a href="{{ path('security_logout') }}">Изход</a></li>
                         {% else %}
@@ -127,6 +133,9 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
                                         <a href="{{ path('category_details', {'id':subCat.id}) }}">{{ subCat.categoryName }}</a>
                                     </li>
                                 {% endfor %}
+                                <li>
+                                    <a href="{{ path('category_details', {'id':category.id}) }}">Покажи всички</a>
+                                </li>
                             </ul>
                         </li>
                     {% endfor %}
@@ -152,6 +161,9 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
                             <li><a href="{{ path('about_us') }}">Относно "Сибирско Здраве"</a> </li>
                             <li><a href="{{ path('contacts') }}">Контакти</a></li>
                             <li><a href="{{ path('shopping_cart') }}">Количка</a></li>
+                            <li><a href="{{ path('others_catalog') }}">Каталог</a></li>
+                            <li><a href="{{ path('others_video') }}">Видео</a></li>
+
 
                             {% if app.user %}
                                 <li>
@@ -174,8 +186,8 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
                                     Email адрес</a></li>
                             <li><a href="https://web.facebook.com/profile.php?id=100009129246783" target="_blank"><i
                                             class="fa fa-facebook" aria-hidden="true"></i> facebook</a></li>
-                            <li><a href="skype:deivko?chat"><i class="fa fa-skype" aria-hidden="true"></i> skype</a>
-                            </li>
+                            <li><a href="skype:deivko?chat"><i class="fa fa-skype" aria-hidden="true"></i> skype</a></li>
+                            <li><a href="{{ path('others_certificates') }}"><i class="fa fa-certificate" aria-hidden="true"></i> Сертификати</a></li>
 
                         </ul>
                     </div>

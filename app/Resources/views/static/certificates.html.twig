@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Сибирско Здраве Монтана - Сертификати {% endblock %}
+
+
+{% block body %}
+    <div class="main-content">
+        <div class="row">
+            <div class="span9">
+                <h5>Сертификати</h5>
+                <div class="clearfix">
+                    <section class="span2">
+                        <a href="{{ asset('content/others/certificates/certificates.pdf') }}">
+                            <img src="{{ asset('content/others/certificates/certificates.png') }}">
+                        </a>
+                    </section>
+                </div>
+            </div>
+            <div class="span3 col">
+                {% embed 'template-parts/randomizer.html.twig' %} {% endembed %}
+                {% embed 'template-parts/best-sellers.html.twig' %} {% endembed %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Сибирско Здраве Монтана - Каталог {% endblock %}
+
+
+{% block body %}
+    <div class="main-content">
+        <div class="row">
+            <div class="span9">
+                <h4>Каталог</h4>
+                <h5>Актуални каталози</h5>
+                <div class="clearfix">
+                    <section class="span2">
+                        <a href="{{ asset('content/others/catalog/cat1.pdf') }}">
+                            <img src="{{ asset('content/others/catalog/cat1.jpg') }}">
+                        </a>
+                    </section>
+                    <section class="span2">
+                        <a href="{{ asset('content/others/catalog/cat2.pdf') }}">
+                            <img src="{{ asset('content/others/catalog/cat2.jpg') }}">
+                        </a>
+                    </section>
+                </div>
+                <h5>Актуален ценоразпис</h5>
+                <section class="span2">
+                    <a href="{{ asset('content/others/catalog/prices.pdf') }}">
+                        <img src="{{ asset('content/others/catalog/price.jpg') }}">
+                    </a>
+                </section>
+            </div>
+            <div class="span3 col">
+                {% embed 'template-parts/randomizer.html.twig' %} {% endembed %}
+                {% embed 'template-parts/best-sellers.html.twig' %} {% endembed %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
