@@ -348,27 +348,6 @@ class OrdersController extends Controller
     }
 
 
-    /**
-     * @Route("/user/other/video", name="others_video")
-     */
-    public function videoPageAction(){
-        return $this->render('static/video.html.twig');
-    }
-
-    /**
-     * @Route("/user/other/catalog", name="others_catalog")
-     */
-    public function catalogPageAction(){
-        return $this->render('static/catalog.html.twig');
-    }
-
-    /**
-     * @Route("/user/other/certificates", name="others_certificates")
-     */
-    public function certificatesPageAction(){
-        return $this->render('static/certificates.html.twig');
-    }
-
 
     //private functions
 }
