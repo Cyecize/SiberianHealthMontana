@@ -282,7 +282,7 @@ class ProductController extends Controller
             "<b>Вашата поръчка беше регистрирана!</b><p>Очаквайте обаждане за потвърждаване на поръчка номер:"
             . $orderId .
             "</p><p>Можете да видите статуса на вашата поръчка <a href='/user/order/$orderId'>тук</a> </p>" .
-        "<p>Също можете да видите вашите продишни поръчки <a href='/user/orders/all'>тук</a> </p>");
+        "<p>Също можете да видите вашите предишни поръчки <a href='/user/orders/all'>тук</a> </p>");
         $notificationManager->sendToUser($this->getUser(), $notification);
 
         $cartManager->unsetDefaultCartCookie();
