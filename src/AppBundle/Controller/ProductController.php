@@ -339,6 +339,9 @@ class ProductController extends Controller
         if ($product == null)
             return $this->render('queries/generic-query-aftermath-message.twig', ["error" => "Несъществуващ продукт"]);
 
+        if($product->getQuantity() <= 0)
+            return $this->render("queries/generic-query-aftermath-message.twig", ['error'=>"Продуктът не е наличен"]);
+
         $arr = $cartManager->addNewProdToCart($prodId, $quantity);
         if ($this->isUserLogged())
             $cartManager->mergeFromCookieToDb($this->getUser(), $arr);
