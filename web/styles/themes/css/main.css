@@ -960,6 +960,16 @@ end checkout custom styles
 base layout custom styles
  */
 
+#search-field:focus{
+    outline: none;
+}
+
+#search-field{
+    outline: none;
+    box-shadow:none !important;
+    border:1px solid rgba(203,204,204,0.3) !important;
+}
+
 .no-wrap{
     display: flex;
     flex-wrap: nowrap;
