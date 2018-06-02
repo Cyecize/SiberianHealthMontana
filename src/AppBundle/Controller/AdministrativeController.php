@@ -408,6 +408,7 @@ class AdministrativeController extends Controller
                 'categories' => $allCategories,
                 'form' => $form->createView(),
                 'product' => $product,
+                'productId'=>$productId
             ]);
     }
 

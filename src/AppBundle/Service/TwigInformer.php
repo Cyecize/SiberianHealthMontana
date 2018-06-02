@@ -9,11 +9,13 @@
 namespace AppBundle\Service;
 
 
+use AppBundle\Constant\Config;
 use AppBundle\Constant\ConstantValues;
 use AppBundle\Constant\PathConstants;
 use AppBundle\Entity\ProductCategory;
 use AppBundle\Entity\SocialLink;
 use AppBundle\Entity\Township;
+use AppBundle\Entity\User;
 use AppBundle\Util\CharacterTranslator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -85,7 +87,6 @@ class TwigInformer
         return ConstantValues::$WEBSITE_NAME;
     }
 
-
     public function setError($msg)
     {
         $this->errorMessage = $msg;
@@ -117,6 +118,14 @@ class TwigInformer
 
     public  function getCharacterTranslator() : CharacterTranslator{
         return new CharacterTranslator();
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function isUserAdmin(User $user) : bool {
+        return $user->getAuthorityLevel() <= Config::$ADMIN_USER_LEVEL;
     }
 
 }

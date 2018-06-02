@@ -40,6 +40,11 @@
                                        class="span1"
                                        placeholder="1" value="1" required>
                             </div>
+                            {% if app.user %}
+                                {% if informator.isUserAdmin(app.user) %}
+                                    <a href="{{ path('edit_product') }}?productId={{ product.id }}">Edit</a>
+                                {% endif %}
+                            {% endif %}
 
                             <br>
                             <button id="addToCartButton" class="btn btn-inverse" type="button">Добави в количката</button>

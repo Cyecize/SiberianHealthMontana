@@ -18,12 +18,12 @@
         <div class="span5">
             <h3>Редакция на продукт</h3>
             <div class="form-style-1">
-                <input type="number" placeholder="ProductId" id="searchProductIdField">
+                <input type="number" placeholder="ProductId" id="searchProductIdField" value="{{ productId }}">
                 <input type="button" value="Search" id="searchProdToEditBtn">
                 <div id="searchProdResult"></div>
             </div>
 
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data" action="{{ path('edit_product') }}">
                 <ul class="form-style-1">
                     <li>
                         <label for="prodName">Име на продукт <span class="required">*</span></label>
