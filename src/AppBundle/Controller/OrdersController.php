@@ -17,6 +17,7 @@ use AppBundle\Entity\ProductOrder;
 use AppBundle\Entity\User;
 use AppBundle\Service\CartManager;
 use AppBundle\Service\DoctrineNotificationManager;
+use AppBundle\Service\YamlParametersManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swift_TransportException;
@@ -249,7 +250,7 @@ class OrdersController extends Controller
         //send mail
         $forgedProds = $cartManager->forgeProductsFromCookie(json_decode($order->getShoppingCart()), $entityManager);
         $message = (new \Swift_Message("Поръчка в Сибирско Здраве - Монтана"))
-            ->setFrom([Config::$MAILER_EMAIL_ADDRESS => Config::$MAILER_DISPLAY_NAME])
+            ->setFrom([YamlParametersManager::getMailerUsername() => Config::$MAILER_DISPLAY_NAME])
             ->setTo($order->getEmail())
             ->setBody($this->renderView(
                 'mailing/order-accepted-message.html.twig',

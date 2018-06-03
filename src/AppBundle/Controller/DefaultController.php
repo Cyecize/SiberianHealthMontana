@@ -17,6 +17,7 @@ use AppBundle\Service\CartManager;
 use AppBundle\Service\DoctrineNotificationManager;
 use AppBundle\Service\TwigInformer;
 use AppBundle\Service\ProductManager;
+use AppBundle\Service\YamlParametersManager;
 use AppBundle\Util\CharacterTranslator;
 use AppBundle\Util\DirectoryCreator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -179,7 +180,7 @@ class DefaultController extends Controller
 
         //send mail
         $message = (new \Swift_Message("Забравена парола - Сибирско Здраве - Монтана"))
-            ->setFrom([Config::$MAILER_EMAIL_ADDRESS => Config::$MAILER_DISPLAY_NAME])
+            ->setFrom([YamlParametersManager::getMailerUsername() => Config::$MAILER_DISPLAY_NAME])
             ->setTo($user->getEmail())
             ->setBody($this->renderView(
                 'mailing/forgotten-password.html.twig',

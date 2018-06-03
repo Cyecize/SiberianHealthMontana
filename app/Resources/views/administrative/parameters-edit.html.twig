@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Edit Parameters {% endblock %}
+
+{% block body %}
+    {% include 'administrative/title-template-part.html.twig' with {'title':'Edit parameters'} %}
+
+    {% if error %}
+        <h3 class="alert alert-danger">{{ error }}</h3>
+    {% endif %}
+
+<div class="main-content clearfix">
+    <h5>Parameters.yml</h5>
+    <small>Changes can lead to the website not working <b>AT ALL</b></small>
+    <div class="row">
+
+        <div class="span6">
+            <form action="{{ path('parameters_edit_post') }}" enctype="multipart/form-data" method="post">
+            {% for key,prop in fullPath %}
+                <div class="row">
+                    <div class="span3">
+                        <p> {{ key }} </p>
+                    </div>
+                    <div class="span3">
+                        <input type="text" value="{{ prop|raw }}" name="{{ key }}">
+                    </div>
+                </div>
+            {% endfor %}
+                <button type="submit" class="btn btn-default">Save Settings</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

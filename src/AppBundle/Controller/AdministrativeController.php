@@ -24,6 +24,7 @@ use AppBundle\Form\ProductType;
 use AppBundle\Repository\SocialLinkRepository;
 use AppBundle\Service\TwigInformer;
 use AppBundle\Service\ProductManager;
+use AppBundle\Service\YamlParametersManager;
 use AppBundle\Util\CharacterTranslator;
 use AppBundle\Util\DirectoryCreator;
 use AppBundle\Util\ImageCompressorManager;
@@ -33,6 +34,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use function Symfony\Component\DependencyInjection\Tests\Fixtures\factoryFunction;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Yaml\Yaml;
 
 
 class AdministrativeController extends Controller
@@ -693,6 +695,40 @@ class AdministrativeController extends Controller
             ]);
     }
 
+    /**
+     * @Route("/admin/parameters/edit", name="parameters_edit", methods={"GET"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @param YamlParametersManager $parametersManager
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function swiftMailerEditAction(Request $request, YamlParametersManager $parametersManager){
+        $user =  $this->castUser($this->getUser());
+
+        if($user->getAuthorityLevel() > Config::$ADMINISTRATOR_LEVEL)
+            return $this->redirectToRoute("admin_panel", ['error'=> "You do not have the rights"]);
+
+        $file = $parametersManager->getYamlParameters();
+        return $this->render("administrative/parameters-edit.html.twig",
+            [
+                'error'=>null,
+                'fullPath'=>$file
+            ]);
+    }
+
+    /**
+     * @Route("/admin/parameters/edit", name="parameters_edit_post", methods={"POST"})
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function parametersEditPostAction(Request $request, YamlParametersManager $parametersManager){
+        $user =  $this->castUser($this->getUser());
+        if($user->getAuthorityLevel() > Config::$ADMINISTRATOR_LEVEL)
+            return $this->redirectToRoute("admin_panel", ['error'=> "You do not have the rights"]);
+        $parametersManager->saveYamlParameters($request->request->all());
+        return $this->redirectToRoute("admin_panel");
+    }
+
 
     /**
      * @param int $prodId
@@ -704,5 +740,13 @@ class AdministrativeController extends Controller
         $connection = $this->getDoctrine()->getConnection();
         $statement = $connection->prepare("INSERT INTO product_category_product VALUES ($catId, $prodId)");
         $statement->execute();
+    }
+
+    /**
+     * @param User $user
+     * @return User
+     */
+    private function castUser(User $user) :User{
+        return $user;
     }
 }
