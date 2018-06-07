@@ -39,11 +39,12 @@
                     <p>Продуктите се доставят до адрес или до офис с наложен платеж</p>
                     <p>Ако предпочитате доставката ви да е до офис, моля напишете името на офиса в полето за
                         <strong>адрес</strong>.</p>
+                    <p>Цена на доставката: {{ informator.getDeliveryPrice() }}лв.</p>
                 </section>
 
                 <section class="alert alert-info" style="color:green">
                     <h4>Вашата количка</h4>
-                    <p>Цена: <strong>{{ totalPrice|format(2) }}</strong></p>
+                    <p>Цена: <strong>{{ (totalPrice + informator.getDeliveryPrice())|format(2) }}</strong></p>
                     {% for prod in products %}
                         <small>{{ prod.title }}</small><br>
                     {% endfor %}

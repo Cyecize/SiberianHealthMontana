@@ -41,6 +41,12 @@ class YamlParametersManager
         return self::getFile()["parameters"]["mailer_user"];
     }
 
+    public static function getDeliveryPrice() : float {
+        $val = floatval(self::getFile()["parameters"]["delivery_price"]);
+
+        return $val;
+    }
+
 
     private static function getFile() : array {
         return Yaml::parse(file_get_contents(self::$FILE_PATH));

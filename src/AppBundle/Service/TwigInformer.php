@@ -128,4 +128,11 @@ class TwigInformer
         return $user->getAuthorityLevel() <= Config::$ADMIN_USER_LEVEL;
     }
 
+    /**
+     * @return integer
+     */
+    public function getDeliveryPrice() : float {
+       return  YamlParametersManager::getDeliveryPrice();
+    }
+
 }
