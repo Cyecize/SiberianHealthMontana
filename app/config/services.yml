@@ -65,3 +65,4 @@ twig:
   globals:
         ga_tracking: UA-xxxxx-x
         informator: '@AppBundle\Service\TwigInformer'
+        domain: "https://www.sibirskozdrave-montana.com"

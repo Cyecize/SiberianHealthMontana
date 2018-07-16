@@ -41,10 +41,22 @@ class ProductController extends Controller
     /**
      * @Route("/{catPath}/product/{id}", name="product_details", defaults={"id"=null})
      * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function specificProductAction($id)
+    {
+        return $this->redirectToRoute("product_detail_simplified", ['id' => $id]);
+        //problem with facebook so i had to fix it but that is the easier way since otherwise I would have had to
+        //edit 5-6 views and their links
+    }
+
+    /**
+     * @Route("/product/{id}", name="product_detail_simplified", defaults={"id"=null})
+     * @param $id
      * @param ProductManager $productManager
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function specificProductAction($id, ProductManager $productManager)
+    public function productDetailsActionSimplified($id, ProductManager $productManager)
     {
         if ($id == null)
             return $this->redirectToRoute("homepage");
@@ -282,7 +294,7 @@ class ProductController extends Controller
             "<b>Вашата поръчка беше регистрирана!</b><p>Очаквайте обаждане за потвърждаване на поръчка номер:"
             . $orderId .
             "</p><p>Можете да видите статуса на вашата поръчка <a href='/user/order/$orderId'>тук</a> </p>" .
-        "<p>Също можете да видите вашите предишни поръчки <a href='/user/orders/all'>тук</a> </p>");
+            "<p>Също можете да видите вашите предишни поръчки <a href='/user/orders/all'>тук</a> </p>");
         $notificationManager->sendToUser($this->getUser(), $notification);
 
         $cartManager->unsetDefaultCartCookie();
@@ -339,8 +351,8 @@ class ProductController extends Controller
         if ($product == null)
             return $this->render('queries/generic-query-aftermath-message.twig', ["error" => "Несъществуващ продукт"]);
 
-        if($product->getQuantity() <= 0)
-            return $this->render("queries/generic-query-aftermath-message.twig", ['error'=>"Продуктът не е наличен"]);
+        if ($product->getQuantity() <= 0)
+            return $this->render("queries/generic-query-aftermath-message.twig", ['error' => "Продуктът не е наличен"]);
 
         $arr = $cartManager->addNewProdToCart($prodId, $quantity);
         if ($this->isUserLogged())

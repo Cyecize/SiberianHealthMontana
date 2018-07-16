@@ -420,6 +420,10 @@ class Product
         return PathConstants::$CATEGORIES_PATH . $this->getFatherCategory()->getLatinName() . DIRECTORY_SEPARATOR . $this->getId() . DIRECTORY_SEPARATOR . $this->getImgPath();
     }
 
+    public function getImgPathForFacebook()  {
+        return preg_replace('/\s+/', "%20", $this->getImgPathForDisplay());
+    }
+
     function getSummary(){
         if (strlen($this->getDescription()) < 500){
             return $this->getDescription();

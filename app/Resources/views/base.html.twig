@@ -10,6 +10,19 @@
     <meta name="description" content="">
     <!--[if ie]>
     <meta content='IE=8' http-equiv='X-UA-Compatible'/><![endif]-->
+
+    <!-- facebook  -->
+    <meta property="fb:app_id" content="{% block fpApp %}877451472440637{% endblock %}">
+    <meta property="og:type" content="{% block ogType %}website{% endblock %}"/>
+    <meta property="og:url" content="{% block ogUrl %}https://sibirskozdrave-montana.com/{% endblock %}"/>
+    <meta property="og:title" content="{% block ogTitle %}Сибирско Здраве Монтана{% endblock %}"/>
+    <meta property="og:image"
+          content="{% block ogImage %}https://sibirskozdrave-montana.com/styles/images/pageBanner.png{% endblock %}"/>
+    <meta property="og:description" content="{% block ogDescription %}Корпорация 'Сибирско здраве' е основана през 1996 година в Новосибирск. През всичките
+    тези години ние активно разработваме и пускаме на пазара широка линия патентовани
+    хранителни добавки както и натурална козметика.{% endblock %}"/>
+
+
     <!-- bootstrap -->
     <link href="{{ asset('styles/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('styles/bootstrap/css/bootstrap-responsive.min.css') }}" rel="stylesheet">
@@ -39,15 +52,6 @@
     {% if app.user %}
         <script src="{{ asset('styles/themes/js/js/notification-modal-manager.js') }}"></script>
     {% endif %}
-
-    <!-- facebook  -->
-    <meta property="og:url" content="https://sibirskozdrave-montana.com/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Сибирско Здраве Монтана" />
-    <meta property="og:description"  content="Корпорация 'Сибирско здраве' е основана през 1996 година в Новосибирск. През всичките
-    тези години ние активно разработваме и пускаме на пазара широка линия патентовани
-    хранителни добавки както и натурална козметика." />
-    <meta property="og:image" content="https://sibirskozdrave-montana.com/styles/images/pageBanner.png" />
 
 
 </head>
@@ -158,7 +162,7 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
                         <h5>Меню: </h5>
                         <ul class="nav">
                             <li><a href="/">Начало</a></li>
-                            <li><a href="{{ path('about_us') }}">Относно "Сибирско Здраве"</a> </li>
+                            <li><a href="{{ path('about_us') }}">Относно "Сибирско Здраве"</a></li>
                             <li><a href="{{ path('contacts') }}">Контакти</a></li>
                             <li><a href="{{ path('shopping_cart') }}">Количка</a></li>
                             <li><a href="{{ path('others_catalog') }}">Каталог</a></li>
@@ -186,8 +190,11 @@ SO BLAME Z-Computers for the bad backend ==D JUST KIDDING
                                     Email адрес</a></li>
                             <li><a href="https://web.facebook.com/profile.php?id=100009129246783" target="_blank"><i
                                             class="fa fa-facebook" aria-hidden="true"></i> facebook</a></li>
-                            <li><a href="skype:deivko?chat"><i class="fa fa-skype" aria-hidden="true"></i> skype</a></li>
-                            <li><a href="{{ path('others_certificates') }}"><i class="fa fa-certificate" aria-hidden="true"></i> Сертификати</a></li>
+                            <li><a href="skype:deivko?chat"><i class="fa fa-skype" aria-hidden="true"></i> skype</a>
+                            </li>
+                            <li><a href="{{ path('others_certificates') }}"><i class="fa fa-certificate"
+                                                                               aria-hidden="true"></i> Сертификати</a>
+                            </li>
 
                         </ul>
                     </div>
