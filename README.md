@@ -12,7 +12,7 @@ Basic functionalities:
 
 -> Shopping cart will stay synced on every computer
 
--> Asj questions
+-> Ask questions
 
 -> Get notified via Notification or Email
 
